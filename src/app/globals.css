@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  --color-snow-dark: #1A1A2E;
+  --color-snow-accent: #4A90D9;
+  --color-snow-accent2: #6ECFBD;
+  --color-snow-light: #F0F4F8;
+  --color-snow-text: #333333;
+  --color-snow-muted: #666666;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--color-snow-text);
+  background: white;
+}
