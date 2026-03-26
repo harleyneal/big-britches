@@ -168,7 +168,7 @@ export default function ServicesPage() {
             >
               <div
                 className="w-12 h-12 rounded-lg flex items-center justify-center mb-6"
-                style={{ color: "var(--sl-lime)", backgroundColor: "var(--sl-blue)" }}
+                style={{ color: "var(--sl-ice)", backgroundColor: "var(--sl-blue)" }}
               >
                 {service.icon}
               </div>
@@ -187,7 +187,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Tech Stack */}
-      <section className="px-6 py-20" style={{ backgroundColor: "var(--sl-blue)" }}>
+      <section className="px-6 py-20" style={{ backgroundColor: "var(--sl-lime)" }}>
         <div className="max-w-6xl mx-auto">
           <h2
             className="text-3xl md:text-4xl font-bold text-center mb-12"

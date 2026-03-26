@@ -26,7 +26,7 @@ export default function ParticleBackground() {
     let particles: Particle[] = [];
     let time = 0;
 
-    const PARTICLE_COUNT = 120;
+    const PARTICLE_COUNT = 160;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -43,8 +43,8 @@ export default function ParticleBackground() {
           y: Math.random() * h,
           vx: (Math.random() - 0.5) * 0.4,
           vy: (Math.random() - 0.5) * 0.4,
-          size: 1.5 + Math.random() * 3,
-          opacity: 0.08 + Math.random() * 0.18,
+          size: 2 + Math.random() * 4,
+          opacity: 0.15 + Math.random() * 0.3,
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
           pulse: Math.random() * Math.PI * 2,
           pulseSpeed: 0.005 + Math.random() * 0.015,
@@ -96,7 +96,7 @@ export default function ParticleBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: 20, opacity: 0.4 }}
+      style={{ zIndex: 20, opacity: 0.7 }}
     />
   );
 }
