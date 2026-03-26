@@ -27,7 +27,7 @@ PROCESS:
 2. Design & Build — Craft a custom site with modern design and fast performance
 3. Launch & Grow — Site goes live; Snow Leopard handles hosting, maintenance, and updates
 
-CONTACT: info@snowleopardllc.io
+CONTACT: harley@snowleopardllc.io
 `;
 
 const SYSTEM_PROMPT = `You are the Snow Leopard Labs virtual assistant. You help visitors learn about Snow Leopard Labs' web design and development services for small businesses.
