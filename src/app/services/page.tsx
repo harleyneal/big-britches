@@ -20,8 +20,7 @@ const services = [
     title: "E-Commerce Solutions",
     desc: "Sell products or services directly from your website. We integrate secure payment processing through Stripe and PayPal, build product catalogs, shopping carts, and checkout flows that convert visitors into customers.",
     icon: "M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z",
-  },
-  {
+  },  {
     title: "SEO & Analytics",
     desc: "Every site comes with foundational SEO — proper meta tags, sitemaps, schema markup, and fast load times. Business tier clients get an advanced analytics dashboard with real-time visitor data and conversion tracking.",
     icon: "M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z",
@@ -37,7 +36,6 @@ const services = [
     icon: "M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z",
   },
 ];
-
 const techStack = [
   { name: "Next.js", desc: "React framework for fast, SEO-friendly sites" },
   { name: "Tailwind CSS", desc: "Utility-first styling for consistent design" },
@@ -51,11 +49,11 @@ export default function Services() {
   return (
     <>
       {/* Header */}
-      <section className="pt-32 pb-16 bg-[var(--color-snow-dark)]">
+      <section className="pt-32 pb-16 bg-[var(--sl-navy)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <p className="text-[var(--color-snow-accent2)] font-semibold text-sm uppercase tracking-wider mb-3">What We Build</p>
+          <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">What We Build</p>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Services That Drive Results</h1>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
+          <p className="text-[var(--sl-ice)]/60 text-lg max-w-2xl mx-auto">
             From simple brochure sites to full-featured web applications, we build everything your business needs to thrive online.
           </p>
         </div>
@@ -65,31 +63,30 @@ export default function Services() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           {services.map((s) => (
-            <div key={s.title} className="p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition-all hover:border-[var(--color-snow-accent)]/30 group">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-snow-accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--color-snow-accent)]/20 transition-colors">
-                <svg className="w-6 h-6 text-[var(--color-snow-accent)]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <div key={s.title} className="p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition-all hover:border-[var(--sl-blue)]/30 group">
+              <div className="w-12 h-12 rounded-xl bg-[var(--sl-blue)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--sl-blue)]/20 transition-colors">
+                <svg className="w-6 h-6 text-[var(--sl-blue)]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={s.icon} />
                 </svg>
-              </div>
-              <h3 className="text-xl font-bold text-[var(--color-snow-dark)] mb-3">{s.title}</h3>
-              <p className="text-[var(--color-snow-muted)] leading-relaxed">{s.desc}</p>
+              </div>              <h3 className="text-xl font-bold text-[var(--sl-navy)] mb-3">{s.title}</h3>
+              <p className="text-[var(--sl-navy)]/60 leading-relaxed">{s.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Tech Stack */}
-      <section className="py-20 bg-[var(--color-snow-light)]">
+      <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[var(--color-snow-dark)]">Built on Modern Technology</h2>
-            <p className="text-[var(--color-snow-muted)] mt-3">We use the same tools powering the world&apos;s fastest-growing startups.</p>
+            <h2 className="text-3xl font-bold text-[var(--sl-navy)]">Built on Modern Technology</h2>
+            <p className="text-[var(--sl-navy)]/60 mt-3">We use the same tools powering the world&apos;s fastest-growing startups.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {techStack.map((t) => (
               <div key={t.name} className="bg-white p-6 rounded-xl text-center border border-gray-100">
-                <h4 className="font-bold text-[var(--color-snow-dark)] mb-1">{t.name}</h4>
-                <p className="text-sm text-[var(--color-snow-muted)]">{t.desc}</p>
+                <h4 className="font-bold text-[var(--sl-navy)] mb-1">{t.name}</h4>
+                <p className="text-sm text-[var(--sl-navy)]/60">{t.desc}</p>
               </div>
             ))}
           </div>
@@ -97,13 +94,13 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[var(--color-snow-dark)]">
+      <section className="py-20 bg-[var(--sl-navy)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Build Something Great?</h2>
-          <p className="text-white/60 text-lg mb-10">Let&apos;s talk about what your business needs and how we can make it happen.</p>
+          <p className="text-[var(--sl-ice)]/60 text-lg mb-10">Let&apos;s talk about what your business needs and how we can make it happen.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/pricing" className="px-8 py-4 bg-[var(--color-snow-accent)] text-white rounded-xl font-semibold hover:bg-[var(--color-snow-accent)]/80 transition-all">View Pricing</Link>
-            <Link href="/contact" className="px-8 py-4 border border-white/20 text-white rounded-xl font-semibold hover:bg-white/10 transition-all">Book a Call</Link>
+            <Link href="/pricing" className="px-8 py-4 bg-[var(--sl-blue)] text-white rounded-xl font-semibold hover:bg-[var(--sl-blue)]/80 transition-all">View Pricing</Link>
+            <Link href="/contact" className="px-8 py-4 border border-[var(--sl-ice)]/20 text-[var(--sl-ice)] rounded-xl font-semibold hover:bg-[var(--sl-ice)]/10 transition-all">Book a Call</Link>
           </div>
         </div>
       </section>

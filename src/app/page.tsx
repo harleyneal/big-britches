@@ -22,7 +22,6 @@ const features = [
     desc: "Low deposit, simple monthly pricing, no hidden fees. Professional quality without the agency price tag.",
   },
 ];
-
 const steps = [
   { num: "01", title: "Discovery Call", desc: "We learn about your business, goals, and brand identity. This is where your vision becomes our blueprint." },
   { num: "02", title: "Design & Build", desc: "We craft your custom site with modern design, fast performance, and every feature you need. 1–3 week turnaround." },
@@ -33,27 +32,26 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center bg-[var(--color-snow-dark)] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-snow-dark)] via-[#1e2a4a] to-[var(--color-snow-dark)]" />
+      <section className="relative min-h-screen flex items-center justify-center bg-[var(--sl-navy)] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--sl-navy)] via-[#162544] to-[var(--sl-navy)]" />
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--color-snow-accent)]/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[var(--color-snow-accent2)]/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--sl-blue)]/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[var(--sl-lime)]/20 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 text-center max-w-4xl px-6 pt-16">
-          <p className="text-[var(--color-snow-accent2)] font-medium mb-4 tracking-wide uppercase text-sm">Web Design & Development for Small Businesses</p>
+          <p className="text-[var(--sl-lime)] font-medium mb-4 tracking-wide uppercase text-sm">Web Design & Development for Small Businesses</p>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
             Your Business Deserves a Website That Works as Hard as You Do
           </h1>
-          <p className="text-lg md:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-[var(--sl-ice)]/60 mb-10 max-w-2xl mx-auto leading-relaxed">
             Professional, custom-built websites with the affordability and simplicity of a subscription. Low deposit. Simple monthly pricing. Big impact.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          </p>          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
-              className="px-8 py-4 bg-[var(--color-snow-accent)] text-white rounded-xl font-semibold text-lg hover:bg-[var(--color-snow-accent)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--color-snow-accent)]/25">
+              className="px-8 py-4 bg-[var(--sl-blue)] text-white rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
               See Our Plans
             </Link>
             <Link href="/services"
-              className="px-8 py-4 border border-white/20 text-white rounded-xl font-semibold text-lg hover:bg-white/10 transition-all">
+              className="px-8 py-4 border border-[var(--sl-ice)]/20 text-[var(--sl-ice)] rounded-xl font-semibold text-lg hover:bg-[var(--sl-ice)]/10 transition-all">
               How It Works
             </Link>
           </div>
@@ -64,19 +62,18 @@ export default function Home() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <p className="text-[var(--color-snow-accent)] font-semibold text-sm uppercase tracking-wider mb-3">Why Snow Leopard Labs</p>
-            <h2 className="text-3xl md:text-5xl font-bold text-[var(--color-snow-dark)]">Everything Your Business Needs Online</h2>
+            <p className="text-[var(--sl-blue)] font-semibold text-sm uppercase tracking-wider mb-3">Why Snow Leopard Labs</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-[var(--sl-navy)]">Everything Your Business Needs Online</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((f) => (
-              <div key={f.title} className="p-8 rounded-2xl bg-[var(--color-snow-light)] hover:shadow-xl transition-all hover:-translate-y-1 group">
-                <div className="w-12 h-12 rounded-xl bg-[var(--color-snow-accent)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--color-snow-accent)]/20 transition-colors">
-                  <svg className="w-6 h-6 text-[var(--color-snow-accent)]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <div key={f.title} className="p-8 rounded-2xl bg-[var(--sl-ice)] hover:shadow-xl transition-all hover:-translate-y-1 group">
+                <div className="w-12 h-12 rounded-xl bg-[var(--sl-blue)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--sl-blue)]/20 transition-colors">
+                  <svg className="w-6 h-6 text-[var(--sl-blue)]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={f.icon} />
                   </svg>
-                </div>
-                <h3 className="text-lg font-bold text-[var(--color-snow-dark)] mb-3">{f.title}</h3>
-                <p className="text-[var(--color-snow-muted)] text-sm leading-relaxed">{f.desc}</p>
+                </div>                <h3 className="text-lg font-bold text-[var(--sl-navy)] mb-3">{f.title}</h3>
+                <p className="text-[var(--sl-navy)]/60 text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -84,26 +81,25 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 bg-[var(--color-snow-dark)]">
+      <section className="py-24 bg-[var(--sl-navy)]">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-16">
-            <p className="text-[var(--color-snow-accent2)] font-semibold text-sm uppercase tracking-wider mb-3">Simple Process</p>
+            <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">Simple Process</p>
             <h2 className="text-3xl md:text-5xl font-bold text-white">Three Steps to Your New Website</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {steps.map((s) => (
               <div key={s.num} className="text-center">
-                <div className="text-6xl font-black text-[var(--color-snow-accent)]/20 mb-4">{s.num}</div>
+                <div className="text-6xl font-black text-[var(--sl-blue)]/20 mb-4">{s.num}</div>
                 <h3 className="text-xl font-bold text-white mb-3">{s.title}</h3>
-                <p className="text-white/50 leading-relaxed">{s.desc}</p>
+                <p className="text-[var(--sl-ice)]/50 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-
       {/* CTA */}
-      <section className="py-24 bg-gradient-to-r from-[var(--color-snow-accent)] to-[var(--color-snow-accent2)]">
+      <section className="py-24 bg-gradient-to-r from-[var(--sl-blue)] to-[var(--sl-lime)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Stand Out Online?</h2>
           <p className="text-white/80 text-lg mb-10 max-w-xl mx-auto">
@@ -111,7 +107,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
-              className="px-8 py-4 bg-white text-[var(--color-snow-dark)] rounded-xl font-bold text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-lg">
+              className="px-8 py-4 bg-white text-[var(--sl-navy)] rounded-xl font-bold text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-lg">
               View Pricing
             </Link>
             <Link href="/contact"
