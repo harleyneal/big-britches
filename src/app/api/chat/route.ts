@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
 
     // Use non-streaming for reliability
     const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-3-5-haiku-20241022",
       max_tokens: 512,
       system: SYSTEM_PROMPT,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
@@ -89,8 +89,7 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error: unknown) {
-    const errObj = error as { status?: number; message?: string; error?: { message?: string } };
-    console.error("Chat API error:", errObj.status, JSON.stringify(errObj.error || errObj.message || error));
+    console.error("Chat API error:", JSON.stringify(error, Object.getOwnPropertyNames(error as object)));
     return new Response(
       JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
