@@ -31,7 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="antialiased bg-[var(--sl-ice)] text-[var(--sl-navy)]">
         <ParticleBackground />
         <Navbar />
-        <main className="relative z-10">{children}</main>
+        <main className="relative">{children}</main>
         <Footer />
       </body>
     </html>
