@@ -80,14 +80,14 @@ export async function POST(req: NextRequest) {
     // Log exact request for debugging
     const apiMessages = messages.map((m) => ({ role: m.role, content: m.content }));
     console.log("Sending to Anthropic:", JSON.stringify({
-      model: "claude-3-5-haiku-20241022",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 512,
       messageCount: apiMessages.length,
       firstMessageRole: apiMessages[0]?.role,
     }));
 
     const response = await client.messages.create({
-      model: "claude-3-5-haiku-20241022",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 512,
       system: SYSTEM_PROMPT,
       messages: apiMessages,
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
     console.error("=== CHAT API ERROR END ===");
 
     return new Response(
-      JSON.stringify({ error: "Something went wrong.", debug: { name: (error as any)?.name, message: String((error as any)?.message).substring(0, 500), status: (error as any)?.status } }),
+      JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
