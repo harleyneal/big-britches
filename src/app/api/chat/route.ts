@@ -5,39 +5,43 @@ import { NextRequest } from "next/server";
 const SITE_CONTEXT = `
 COMPANY: Snow Leopard Labs LLC
 WEBSITE: https://www.snowleopardllc.io
-INDUSTRY: Web design & development for small businesses
+INDUSTRY: All-in-one website and business platform for small businesses
+
+WHAT WE DO:
+Snow Leopard Labs builds custom websites paired with a powerful admin dashboard — scheduling, payments, order tracking, and AI tools — all under one simple subscription.
 
 SERVICES:
-- Custom Website Design (built from scratch, no templates)
-- Web Applications (interactive tools, dashboards, portals)
-- CRM Integration (customer management built into your site)
-- E-Commerce (online stores with payment processing)
-- SEO & Analytics (search optimization, traffic tracking)
-- Social Media Integration (connect and manage social presence)
-- AI-Powered Tools (chatbots, content suggestions, SEO assistant)
+- Custom Website Design (built from scratch, no templates, fully responsive)
+- Admin Dashboard (manage your entire business from one clean interface)
+- Online Scheduling & Booking (customers book directly from your site)
+- Payments & Invoicing (powered by Stripe, built into your dashboard)
+- Order & Job Tracking (simple workflow: New → In Progress → Complete → Paid)
+- AI-Powered Tools (chatbot for customer inquiries, SEO assistant, content suggestions)
 
 PRICING:
-- Starter Plan: $29/month — Custom single-page website, mobile responsive, basic SEO, contact form, monthly content update
-- Business Plan: $79-99/month — Multi-page custom site, CRM integration, e-commerce ready, advanced SEO & analytics, AI chatbot, social media integration, priority support
+- Startup Plan: $29/month ($299-$499 deposit) — Custom website (up to 5 pages), admin dashboard, online scheduling, Stripe payments, basic invoicing, order tracking, AI chatbot, basic SEO, monthly maintenance
+- Business Plan: $79-99/month ($599-$999 deposit) — Everything in Startup plus: expanded site (15+ pages), e-commerce, advanced analytics, custom booking flows, AI chatbot with custom training, blog/CMS, member areas, priority support, monthly strategy session
 - All plans: Low deposit to get started, simple monthly subscription, no hidden fees
-- Typical turnaround: 1-3 weeks from discovery call to launch
+- Typical turnaround: 1-3 weeks from consultation to launch
 
 PROCESS:
-1. Discovery Call — Learn about the business, goals, and brand identity
-2. Design & Build — Craft a custom site with modern design and fast performance
-3. Launch & Grow — Site goes live; Snow Leopard handles hosting, maintenance, and updates
+1. Tell Us About Your Business — Fill out a form or chat with us online
+2. Design & Build — We design your custom site and configure your dashboard (1-3 weeks)
+3. Launch & Grow — Your site and dashboard go live; we handle hosting, maintenance, and updates
 
 CONTACT: harley@snowleopardllc.io
+CONSULTATION: All consultations are done online — no phone calls required. Use the contact form or this chat.
 `;
 
-const SYSTEM_PROMPT = `You are the Snow Leopard Labs virtual assistant. You help visitors learn about Snow Leopard Labs' web design and development services for small businesses.
+const SYSTEM_PROMPT = `You are the Snow Leopard Labs virtual assistant. You help visitors learn about Snow Leopard Labs' all-in-one website and business platform for small businesses.
 
 Here is everything you know about the company:
 ${SITE_CONTEXT}
 GUIDELINES:
 - Be friendly, concise, and helpful. Keep responses to 2-3 sentences when possible.
-- If someone asks about pricing, mention both tiers and suggest a discovery call for a custom quote.
-- If someone asks a question you cannot answer, direct them to email info@snowleopardllc.io or use the contact form.
+- If someone asks about pricing, mention both tiers and suggest they fill out the contact form or continue chatting for a custom recommendation.
+- NEVER suggest a phone call or discovery call. All consultations are done online via chat or the contact form.
+- If someone asks a question you cannot answer, direct them to email harley@snowleopardllc.io or use the contact form.
 - Never make up information. Only use what is provided above.
 - You represent Snow Leopard Labs — be professional but approachable.
 - If asked about competitors or other companies, stay neutral and redirect to Snow Leopard's strengths.
@@ -60,31 +64,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Log key prefix for debugging (safe — only first 12 chars)
-    console.log("API key starts with:", apiKey.substring(0, 12) + "...");
-    console.log("API key length:", apiKey.length);
-
     const client = new Anthropic({ apiKey });
-
     const body = await req.json();
     const { messages } = body as { messages: ChatMessage[] };
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      console.error("Invalid messages:", JSON.stringify(body));
       return new Response(JSON.stringify({ error: "Messages array required" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Log exact request for debugging
     const apiMessages = messages.map((m) => ({ role: m.role, content: m.content }));
-    console.log("Sending to Anthropic:", JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 512,
-      messageCount: apiMessages.length,
-      firstMessageRole: apiMessages[0]?.role,
-    }));
 
     const response = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
@@ -93,7 +84,6 @@ export async function POST(req: NextRequest) {
       messages: apiMessages,
     });
 
-    // Extract text from response
     const text = response.content
       .filter((block): block is Anthropic.TextBlock => block.type === "text")
       .map((block) => block.text)
@@ -103,27 +93,13 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err: unknown) {
-    // Comprehensive error logging for Anthropic SDK errors
     const error = err as Record<string, unknown>;
-    console.error("=== CHAT API ERROR START ===");
-    console.error("Error type:", typeof err);
-    console.error("Error name:", error?.name);
-    console.error("Error message:", error?.message);
-    console.error("Error status:", error?.status);
-    // Try to get the response body from Anthropic errors
+    console.error("=== CHAT API ERROR ===");
+    console.error("Error:", error?.message);
+    console.error("Status:", error?.status);
     if (error?.error) {
-      console.error("Error body:", JSON.stringify(error.error));
+      console.error("Body:", JSON.stringify(error.error));
     }
-    if (error?.headers) {
-      console.error("Error headers:", JSON.stringify(error.headers));
-    }
-    // Fallback: stringify everything we can
-    try {
-      console.error("Full error JSON:", JSON.stringify(err, null, 2));
-    } catch {
-      console.error("Error not JSON-serializable, toString:", String(err));
-    }
-    console.error("=== CHAT API ERROR END ===");
 
     return new Response(
       JSON.stringify({ error: "Something went wrong. Please try again." }),

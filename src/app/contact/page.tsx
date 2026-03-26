@@ -107,7 +107,7 @@ export default function Contact() {
               <h3 className="font-bold text-[var(--sl-navy)] mb-3">What happens next?</h3>
               <ol className="space-y-3 text-sm text-[var(--sl-navy)]/60">
                 <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">1.</span> We review your message and respond within 24 hours</li>
-                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">2.</span> We schedule a free discovery call to learn about your business</li>
+                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">2.</span> We review your submission and put together a custom plan for your business</li>
                 <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">3.</span> We present a custom proposal tailored to your needs</li>
                 <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">4.</span> Once approved, we start building your site immediately</li>
               </ol>
