@@ -50,33 +50,47 @@ interface ChatMessage {
 
 export async function POST(req: NextRequest) {
   try {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.error("ANTHROPIC_API_KEY is not set");
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+
+    if (!apiKey) {
+      console.error("ANTHROPIC_API_KEY is not set in environment");
       return new Response(
         JSON.stringify({ error: "Chat service not configured." }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    const client = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
+    // Log key prefix for debugging (safe — only first 12 chars)
+    console.log("API key starts with:", apiKey.substring(0, 12) + "...");
+    console.log("API key length:", apiKey.length);
 
-    const { messages } = (await req.json()) as { messages: ChatMessage[] };
+    const client = new Anthropic({ apiKey });
 
-    if (!messages || !Array.isArray(messages)) {
+    const body = await req.json();
+    const { messages } = body as { messages: ChatMessage[] };
+
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      console.error("Invalid messages:", JSON.stringify(body));
       return new Response(JSON.stringify({ error: "Messages array required" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Use non-streaming for reliability
+    // Log exact request for debugging
+    const apiMessages = messages.map((m) => ({ role: m.role, content: m.content }));
+    console.log("Sending to Anthropic:", JSON.stringify({
+      model: "claude-3-5-haiku-20241022",
+      max_tokens: 512,
+      messageCount: apiMessages.length,
+      firstMessageRole: apiMessages[0]?.role,
+    }));
+
     const response = await client.messages.create({
       model: "claude-3-5-haiku-20241022",
       max_tokens: 512,
       system: SYSTEM_PROMPT,
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+      messages: apiMessages,
     });
 
     // Extract text from response
@@ -88,8 +102,29 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ response: text }), {
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error: unknown) {
-    console.error("Chat API error:", JSON.stringify(error, Object.getOwnPropertyNames(error as object)));
+  } catch (err: unknown) {
+    // Comprehensive error logging for Anthropic SDK errors
+    const error = err as Record<string, unknown>;
+    console.error("=== CHAT API ERROR START ===");
+    console.error("Error type:", typeof err);
+    console.error("Error name:", error?.name);
+    console.error("Error message:", error?.message);
+    console.error("Error status:", error?.status);
+    // Try to get the response body from Anthropic errors
+    if (error?.error) {
+      console.error("Error body:", JSON.stringify(error.error));
+    }
+    if (error?.headers) {
+      console.error("Error headers:", JSON.stringify(error.headers));
+    }
+    // Fallback: stringify everything we can
+    try {
+      console.error("Full error JSON:", JSON.stringify(err, null, 2));
+    } catch {
+      console.error("Error not JSON-serializable, toString:", String(err));
+    }
+    console.error("=== CHAT API ERROR END ===");
+
     return new Response(
       JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
