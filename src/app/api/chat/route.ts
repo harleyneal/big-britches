@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
     console.error("=== CHAT API ERROR END ===");
 
     return new Response(
-      JSON.stringify({ error: "Something went wrong. Please try again.", debug: { name: (error as any)?.name, message: (error as any)?.message, status: (error as any)?.status, body: (error as any)?.error } }),
+      JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
