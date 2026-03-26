@@ -51,7 +51,7 @@ export default function About() {
           <h2 className="text-3xl font-bold text-[var(--sl-navy)] text-center mb-12">What We Stand For</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {values.map((v) => (
-              <div key={v.title} className="bg-white p-8 rounded-2xl border border-[var(--sl-navy)]/10">
+              <div key={v.title} className="bg-[var(--sl-ice)] p-8 rounded-2xl border border-[var(--sl-navy)]/10">
                 <h3 className="text-xl font-bold text-[var(--sl-navy)] mb-3">{v.title}</h3>
                 <p className="text-[var(--sl-navy)]/60 leading-relaxed">{v.desc}</p>
               </div>

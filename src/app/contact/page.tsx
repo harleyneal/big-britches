@@ -55,7 +55,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Which plan are you interested in?</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all bg-white">
+                  <select className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all bg-[var(--sl-ice)]">
                     <option value="">Select a plan...</option>
                     <option value="starter">Starter ($29/mo)</option>
                     <option value="business">Business ($79–$99/mo)</option>

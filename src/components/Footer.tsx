@@ -34,7 +34,7 @@ export default function Footer() {
             <h4 className="text-[var(--sl-ice)] font-semibold text-sm mb-4 uppercase tracking-wider">Get In Touch</h4>
             <div className="space-y-2 text-sm">
               <p>info@snowleopardllc.io</p>
-              <Link href="/contact" className="inline-block mt-3 px-5 py-2 bg-[var(--sl-blue)] text-white rounded-lg text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
+              <Link href="/contact" className="inline-block mt-3 px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-lg text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
                 Contact Us
               </Link>
             </div>

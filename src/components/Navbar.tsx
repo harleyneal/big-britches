@@ -30,7 +30,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link href="/contact"
-            className="px-5 py-2 bg-[var(--sl-blue)] text-white rounded-lg text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
+            className="px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-lg text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
             Get Started
           </Link>
         </div>
@@ -54,7 +54,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link href="/contact" onClick={() => setMobileOpen(false)}
-            className="block px-5 py-2 bg-[var(--sl-blue)] text-white rounded-lg text-sm font-semibold text-center">
+            className="block px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-lg text-sm font-semibold text-center">
             Get Started
           </Link>
         </div>

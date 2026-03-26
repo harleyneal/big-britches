@@ -84,7 +84,7 @@ export default function Services() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {techStack.map((t) => (
-              <div key={t.name} className="bg-white p-6 rounded-xl text-center border border-[var(--sl-navy)]/10">
+              <div key={t.name} className="bg-[var(--sl-ice)] p-6 rounded-xl text-center border border-[var(--sl-navy)]/10">
                 <h4 className="font-bold text-[var(--sl-navy)] mb-1">{t.name}</h4>
                 <p className="text-sm text-[var(--sl-navy)]/60">{t.desc}</p>
               </div>

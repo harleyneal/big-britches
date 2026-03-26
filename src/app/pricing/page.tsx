@@ -53,7 +53,7 @@ export default function Pricing() {
       <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Starter */}
-          <div className="bg-white rounded-2xl p-10 shadow-sm border border-[var(--sl-navy)]/10 flex flex-col">
+          <div className="bg-[var(--sl-ice)] rounded-2xl p-10 shadow-sm border border-[var(--sl-navy)]/10 flex flex-col">
             <p className="text-[var(--sl-blue)] font-semibold text-sm uppercase tracking-wider mb-2">Starter</p>
             <h3 className="text-2xl font-bold text-[var(--sl-navy)] mb-1">For Individuals & Small Businesses</h3>            <div className="mt-6 mb-2">
               <span className="text-4xl font-black text-[var(--sl-navy)]">$29</span>
@@ -70,7 +70,7 @@ export default function Pricing() {
                 </li>
               ))}
             </ul>
-            <Link href="/contact" className="block text-center px-6 py-3 border-2 border-[var(--sl-blue)] text-[var(--sl-blue)] rounded-xl font-semibold hover:bg-[var(--sl-blue)] hover:text-white transition-all">
+            <Link href="/contact" className="block text-center px-6 py-3 border-2 border-[var(--sl-blue)] text-[var(--sl-blue)] rounded-xl font-semibold hover:bg-[var(--sl-blue)] hover:text-[var(--sl-ice)] transition-all">
               Get Started
             </Link>
           </div>
