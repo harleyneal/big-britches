@@ -38,6 +38,24 @@ export default function Home() {
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--sl-blue)]/30 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[var(--sl-lime)]/20 rounded-full blur-3xl" />
         </div>
+        {/* Giant half-face watermark — right half of the symbol, peeking from the left edge */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            left: '-18vw',
+            width: '65vh',
+            height: '68vh',
+            opacity: 0.06,
+          }}
+        >
+          <img
+            src="/symbol.svg"
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-contain"
+            style={{ filter: 'brightness(3)' }}
+          />
+        </div>
         <div className="relative z-10 text-center max-w-4xl px-6 pt-16">
           <p className="text-[var(--sl-lime)] font-medium mb-4 tracking-wide uppercase text-sm">Web Design & Development for Small Businesses</p>
           <h1 className="text-5xl md:text-7xl font-bold text-[var(--sl-ice)] mb-6 tracking-tight leading-tight">
