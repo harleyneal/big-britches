@@ -52,7 +52,7 @@ export default function Services() {
       <section className="pt-32 pb-16 bg-[var(--sl-navy)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">What We Build</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Services That Drive Results</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-[var(--sl-ice)] mb-6">Services That Drive Results</h1>
           <p className="text-[var(--sl-ice)]/60 text-lg max-w-2xl mx-auto">
             From simple brochure sites to full-featured web applications, we build everything your business needs to thrive online.
           </p>
@@ -60,10 +60,10 @@ export default function Services() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           {services.map((s) => (
-            <div key={s.title} className="p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition-all hover:border-[var(--sl-blue)]/30 group">
+            <div key={s.title} className="p-8 rounded-2xl border border-[var(--sl-navy)]/10 hover:shadow-lg transition-all hover:border-[var(--sl-blue)]/30 group">
               <div className="w-12 h-12 rounded-xl bg-[var(--sl-blue)]/10 flex items-center justify-center mb-5 group-hover:bg-[var(--sl-blue)]/20 transition-colors">
                 <svg className="w-6 h-6 text-[var(--sl-blue)]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={s.icon} />
@@ -84,7 +84,7 @@ export default function Services() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {techStack.map((t) => (
-              <div key={t.name} className="bg-white p-6 rounded-xl text-center border border-gray-100">
+              <div key={t.name} className="bg-white p-6 rounded-xl text-center border border-[var(--sl-navy)]/10">
                 <h4 className="font-bold text-[var(--sl-navy)] mb-1">{t.name}</h4>
                 <p className="text-sm text-[var(--sl-navy)]/60">{t.desc}</p>
               </div>
@@ -96,10 +96,10 @@ export default function Services() {
       {/* CTA */}
       <section className="py-20 bg-[var(--sl-navy)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Build Something Great?</h2>
-          <p className="text-[var(--sl-ice)]/60 text-lg mb-10">Let&apos;s talk about what your business needs and how we can make it happen.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--sl-ice)] mb-6">Ready to Build Something Great?</h2>
+          <p className="text-[var(--sl-ice)]/80 text-lg mb-10">Let&apos;s talk about what your business needs and how we can make it happen.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/pricing" className="px-8 py-4 bg-[var(--sl-blue)] text-white rounded-xl font-semibold hover:bg-[var(--sl-blue)]/80 transition-all">View Pricing</Link>
+            <Link href="/pricing" className="px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-semibold hover:bg-[var(--sl-blue)]/80 transition-all">View Pricing</Link>
             <Link href="/contact" className="px-8 py-4 border border-[var(--sl-ice)]/20 text-[var(--sl-ice)] rounded-xl font-semibold hover:bg-[var(--sl-ice)]/10 transition-all">Book a Call</Link>
           </div>
         </div>

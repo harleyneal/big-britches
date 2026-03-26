@@ -1,12 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --color-snow-dark: #1A1A2E;
-  --color-snow-accent: #4A90D9;
-  --color-snow-accent2: #6ECFBD;
-  --color-snow-light: #F0F4F8;
-  --color-snow-text: #333333;
-  --color-snow-muted: #666666;
+  /* Snow Leopard Labs Official Palette */
+  --sl-ice: #EBF3F7;        /* Light icy blue */
+  --sl-blue: #1A97F4;       /* Bright blue */
+  --sl-navy: #13284E;       /* Deep dark navy */
+  --sl-lime: #A1CE00;       /* Lime green accent */
+  
+  /* Derived transparencies */
+  --sl-ice-50: rgba(235, 243, 247, 0.5);
+  --sl-blue-20: rgba(26, 151, 244, 0.2);
+  --sl-blue-10: rgba(26, 151, 244, 0.1);
+  --sl-navy-80: rgba(19, 40, 78, 0.8);
+  --sl-lime-20: rgba(161, 206, 0, 0.2);
 }
 
 html {
@@ -15,6 +21,6 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: var(--color-snow-text);
-  background: white;
+  color: var(--sl-navy);
+  background: var(--sl-ice);
 }

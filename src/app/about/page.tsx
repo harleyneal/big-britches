@@ -14,7 +14,7 @@ export default function About() {
       <section className="pt-32 pb-16 bg-[var(--sl-navy)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">Our Story</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Built for the Businesses That Build Communities</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-[var(--sl-ice)] mb-6">Built for the Businesses That Build Communities</h1>
           <p className="text-[var(--sl-ice)]/60 text-lg max-w-2xl mx-auto">
             Snow Leopard Labs LLC was founded on a simple belief: every small business deserves a professional online presence, regardless of budget.
           </p>
@@ -22,7 +22,7 @@ export default function About() {
       </section>
 
       {/* Mission */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -51,7 +51,7 @@ export default function About() {
           <h2 className="text-3xl font-bold text-[var(--sl-navy)] text-center mb-12">What We Stand For</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {values.map((v) => (
-              <div key={v.title} className="bg-white p-8 rounded-2xl border border-gray-100">
+              <div key={v.title} className="bg-white p-8 rounded-2xl border border-[var(--sl-navy)]/10">
                 <h3 className="text-xl font-bold text-[var(--sl-navy)] mb-3">{v.title}</h3>
                 <p className="text-[var(--sl-navy)]/60 leading-relaxed">{v.desc}</p>
               </div>
@@ -62,9 +62,9 @@ export default function About() {
       {/* CTA */}
       <section className="py-20 bg-[var(--sl-navy)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Let&apos;s Build Something Together</h2>
-          <p className="text-[var(--sl-ice)]/60 text-lg mb-10">We&apos;d love to hear about your business and how we can help you grow online.</p>
-          <Link href="/contact" className="inline-block px-8 py-4 bg-[var(--sl-blue)] text-white rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--sl-ice)] mb-6">Let&apos;s Build Something Together</h2>
+          <p className="text-[var(--sl-ice)]/80 text-lg mb-10">We&apos;d love to hear about your business and how we can help you grow online.</p>
+          <Link href="/contact" className="inline-block px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
             Get In Touch
           </Link>
         </div>

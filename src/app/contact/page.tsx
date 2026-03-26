@@ -15,7 +15,7 @@ export default function Contact() {
       <section className="pt-32 pb-16 bg-[var(--sl-navy)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">Get In Touch</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Let&apos;s Talk About Your Project</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-[var(--sl-ice)] mb-6">Let&apos;s Talk About Your Project</h1>
           <p className="text-[var(--sl-ice)]/60 text-lg max-w-2xl mx-auto">
             Ready to get started? Have questions? Fill out the form below and we&apos;ll get back to you within 24 hours.
           </p>
@@ -23,7 +23,7 @@ export default function Contact() {
       </section>
 
       {/* Form */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Form */}
           <div>
@@ -40,22 +40,22 @@ export default function Contact() {
                   <div>
                     <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Name</label>
                     <input type="text" required placeholder="Your name"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all" />
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Email</label>
                     <input type="email" required placeholder="you@company.com"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all" />
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Business Name</label>
                   <input type="text" placeholder="Your business name"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all" />
+                    className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Which plan are you interested in?</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all bg-white">
+                  <select className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all bg-white">
                     <option value="">Select a plan...</option>
                     <option value="starter">Starter ($29/mo)</option>
                     <option value="business">Business ($79–$99/mo)</option>
@@ -64,10 +64,10 @@ export default function Contact() {
                 </div>                <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Tell us about your project</label>
                   <textarea rows={5} required placeholder="What does your business do? What are you looking for in a website?"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all resize-none" />
+                    className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all resize-none" />
                 </div>
                 <button type="submit"
-                  className="w-full px-6 py-4 bg-[var(--sl-blue)] text-white rounded-xl font-bold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-[1.02] shadow-lg shadow-[var(--sl-blue)]/25">
+                  className="w-full px-6 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-bold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-[1.02] shadow-lg shadow-[var(--sl-blue)]/25">
                   Send Message
                 </button>
               </form>

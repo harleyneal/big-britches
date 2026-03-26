@@ -33,21 +33,21 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center bg-[var(--sl-navy)] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--sl-navy)] via-[#162544] to-[var(--sl-navy)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--sl-navy)] via-[var(--sl-navy)] to-[var(--sl-navy)]" />
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--sl-blue)]/30 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[var(--sl-lime)]/20 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 text-center max-w-4xl px-6 pt-16">
           <p className="text-[var(--sl-lime)] font-medium mb-4 tracking-wide uppercase text-sm">Web Design & Development for Small Businesses</p>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold text-[var(--sl-ice)] mb-6 tracking-tight leading-tight">
             Your Business Deserves a Website That Works as Hard as You Do
           </h1>
-          <p className="text-lg md:text-xl text-[var(--sl-ice)]/60 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-[var(--sl-ice)]/80 mb-10 max-w-2xl mx-auto leading-relaxed">
             Professional, custom-built websites with the affordability and simplicity of a subscription. Low deposit. Simple monthly pricing. Big impact.
           </p>          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
-              className="px-8 py-4 bg-[var(--sl-blue)] text-white rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
+              className="px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
               See Our Plans
             </Link>
             <Link href="/services"
@@ -59,7 +59,7 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-[var(--sl-ice)]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <p className="text-[var(--sl-blue)] font-semibold text-sm uppercase tracking-wider mb-3">Why Snow Leopard Labs</p>
@@ -85,14 +85,14 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-16">
             <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">Simple Process</p>
-            <h2 className="text-3xl md:text-5xl font-bold text-white">Three Steps to Your New Website</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-[var(--sl-ice)]">Three Steps to Your New Website</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {steps.map((s) => (
               <div key={s.num} className="text-center">
                 <div className="text-6xl font-black text-[var(--sl-blue)]/20 mb-4">{s.num}</div>
-                <h3 className="text-xl font-bold text-white mb-3">{s.title}</h3>
-                <p className="text-[var(--sl-ice)]/50 leading-relaxed">{s.desc}</p>
+                <h3 className="text-xl font-bold text-[var(--sl-ice)] mb-3">{s.title}</h3>
+                <p className="text-[var(--sl-ice)]/80 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -101,17 +101,17 @@ export default function Home() {
       {/* CTA */}
       <section className="py-24 bg-gradient-to-r from-[var(--sl-blue)] to-[var(--sl-lime)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Stand Out Online?</h2>
-          <p className="text-white/80 text-lg mb-10 max-w-xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold text-[var(--sl-ice)] mb-6">Ready to Stand Out Online?</h2>
+          <p className="text-[var(--sl-ice)]/80 text-lg mb-10 max-w-xl mx-auto">
             Join small businesses already growing with Snow Leopard Labs. Get a professional website without the professional price tag.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
-              className="px-8 py-4 bg-white text-[var(--sl-navy)] rounded-xl font-bold text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-lg">
+              className="px-8 py-4 bg-[var(--sl-ice)] text-[var(--sl-navy)] rounded-xl font-bold text-lg hover:bg-[var(--sl-ice)]/90 transition-all hover:scale-105 shadow-lg">
               View Pricing
             </Link>
             <Link href="/contact"
-              className="px-8 py-4 border-2 border-white text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all">
+              className="px-8 py-4 border-2 border-[var(--sl-ice)] text-[var(--sl-ice)] rounded-xl font-bold text-lg hover:bg-[var(--sl-ice)]/10 transition-all">
               Book a Call
             </Link>
           </div>

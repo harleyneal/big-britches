@@ -42,7 +42,7 @@ export default function Pricing() {
       <section className="pt-32 pb-16 bg-[var(--sl-navy)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-3">Simple, Transparent Pricing</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Invest a Little, Impact a Lot</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-[var(--sl-ice)] mb-6">Invest a Little, Impact a Lot</h1>
           <p className="text-[var(--sl-ice)]/60 text-lg max-w-2xl mx-auto">
             A small deposit to get started, then a simple monthly subscription that covers everything. No hidden fees, no surprises.
           </p>
@@ -53,7 +53,7 @@ export default function Pricing() {
       <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Starter */}
-          <div className="bg-white rounded-2xl p-10 shadow-sm border border-gray-100 flex flex-col">
+          <div className="bg-white rounded-2xl p-10 shadow-sm border border-[var(--sl-navy)]/10 flex flex-col">
             <p className="text-[var(--sl-blue)] font-semibold text-sm uppercase tracking-wider mb-2">Starter</p>
             <h3 className="text-2xl font-bold text-[var(--sl-navy)] mb-1">For Individuals & Small Businesses</h3>            <div className="mt-6 mb-2">
               <span className="text-4xl font-black text-[var(--sl-navy)]">$29</span>
@@ -76,12 +76,12 @@ export default function Pricing() {
           </div>
 
           {/* Business */}
-          <div className="bg-[var(--sl-navy)] rounded-2xl p-10 shadow-xl border border-white/10 flex flex-col relative overflow-hidden">
+          <div className="bg-[var(--sl-navy)] rounded-2xl p-10 shadow-xl border border-[var(--sl-ice)]/10 flex flex-col relative overflow-hidden">
             <div className="absolute top-0 right-0 bg-[var(--sl-lime)] text-[var(--sl-navy)] text-xs font-bold px-4 py-1.5 rounded-bl-xl">Most Popular</div>
             <p className="text-[var(--sl-lime)] font-semibold text-sm uppercase tracking-wider mb-2">Business</p>
-            <h3 className="text-2xl font-bold text-white mb-1">For Growing Companies & Web Apps</h3>
+            <h3 className="text-2xl font-bold text-[var(--sl-ice)] mb-1">For Growing Companies & Web Apps</h3>
             <div className="mt-6 mb-2">
-              <span className="text-4xl font-black text-white">$79 – $99</span>
+              <span className="text-4xl font-black text-[var(--sl-ice)]">$79 – $99</span>
               <span className="text-[var(--sl-ice)]/50">/month</span>
             </div>
             <p className="text-sm text-[var(--sl-ice)]/40 mb-8">$599 – $999 one-time deposit</p>            <ul className="space-y-3 mb-10 flex-1">
@@ -102,12 +102,12 @@ export default function Pricing() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[var(--sl-ice)]">
         <div className="max-w-3xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-[var(--sl-navy)] text-center mb-12">Frequently Asked Questions</h2>
           <div className="space-y-6">
             {faqs.map((faq) => (
-              <div key={faq.q} className="border-b border-gray-100 pb-6">
+              <div key={faq.q} className="border-b border-[var(--sl-navy)]/10 pb-6">
                 <h3 className="text-lg font-semibold text-[var(--sl-navy)] mb-2">{faq.q}</h3>
                 <p className="text-[var(--sl-navy)]/60 leading-relaxed">{faq.a}</p>
               </div>
