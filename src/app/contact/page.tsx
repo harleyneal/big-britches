@@ -87,7 +87,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-[var(--sl-navy)]">Email</h4>
-                    <p className="text-[var(--sl-navy)]/60">info@snowleopardllc.io</p>
+                    <p className="text-[var(--sl-navy)]/60">harley@snowleopardllc.io</p>
                   </div>
                 </div>                <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-[var(--sl-blue)]/10 flex items-center justify-center shrink-0">

@@ -48,7 +48,7 @@ export default function ChatWidget() {
     } catch {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "Sorry, something went wrong. Please try again or email us at info@snowleopardllc.io." },
+        { role: "assistant", content: "Sorry, something went wrong. Please try again or email us at harley@snowleopardllc.io." },
       ]);
     } finally {
       setLoading(false);

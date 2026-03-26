@@ -187,7 +187,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Tech Stack */}
-      <section className="px-6 py-20" style={{ backgroundColor: "var(--sl-lime)" }}>
+      <section className="px-6 py-20" style={{ backgroundColor: "var(--sl-ice)" }}>
         <div className="max-w-6xl mx-auto">
           <h2
             className="text-3xl md:text-4xl font-bold text-center mb-12"

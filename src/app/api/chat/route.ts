@@ -20,8 +20,8 @@ SERVICES:
 
 PRICING:
 - Startup Plan: $29/month ($299-$499 deposit) — Custom website (up to 5 pages), admin dashboard, online scheduling, Stripe payments, basic invoicing, order tracking, AI chatbot, basic SEO, monthly maintenance
-- Business Plan: $79-99/month ($599-$999 deposit) — Everything in Startup plus: expanded site (15+ pages), e-commerce, advanced analytics, custom booking flows, AI chatbot with custom training, blog/CMS, member areas, priority support, monthly strategy session
-- All plans: Low deposit to get started, simple monthly subscription, no hidden fees
+- Business Plan: $79-99/month ($599-$999 deposit) — Everything in Startup plus: expanded site (15+ pages), e-commerce, advanced analytics, custom booking flows, AI chatbot with custom training, blog/CMS, member areas, priority support
+- All plans: Low deposit to get started, simple monthly subscription, cloud hosting included, no hidden fees
 - Typical turnaround: 1-3 weeks from consultation to launch
 
 PROCESS:

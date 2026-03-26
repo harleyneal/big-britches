@@ -76,11 +76,11 @@ export default function PricingPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Monthly maintenance & security updates</span>
+                <span className="text-[var(--sl-navy)]">Cloud hosting, maintenance & security updates included</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Email & chat support (48-hr response)</span>
+                <span className="text-[var(--sl-navy)]">Email Email & chat support (48-hr response) chat support (24-hr response)</span>
               </li>
             </ul>
 
@@ -154,7 +154,7 @@ export default function PricingPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Priority support (24-hr response) + monthly strategy session</span>
+                <span className="text-[var(--sl-ice)]">Email & chat support (24-hr response)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
