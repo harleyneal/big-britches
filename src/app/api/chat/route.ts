@@ -1,10 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
 // Site content — auto-included so the bot knows the business
 const SITE_CONTEXT = `
 COMPANY: Snow Leopard Labs LLC
@@ -54,6 +50,18 @@ interface ChatMessage {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error("ANTHROPIC_API_KEY is not set");
+      return new Response(
+        JSON.stringify({ error: "Chat service not configured." }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const client = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+
     const { messages } = (await req.json()) as { messages: ChatMessage[] };
 
     if (!messages || !Array.isArray(messages)) {
@@ -63,32 +71,26 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Stream response from Claude
-    const stream = await client.messages.stream({
+    // Use non-streaming for reliability, then return full response
+    const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 512,
       system: SYSTEM_PROMPT,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
     });
 
-    // Return as a readable stream
-    const encoder = new TextEncoder();
-    const readable = new ReadableStream({
-      async start(controller) {
-        for await (const event of stream) {
-          if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-            controller.enqueue(encoder.encode(event.delta.text));
-          }
-        }
-        controller.close();
-      },
-    });
+    // Extract text from response
+    const text = response.content
+      .filter((block): block is Anthropic.TextBlock => block.type === "text")
+      .map((block) => block.text)
+      .join("");
 
-    return new Response(readable, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    return new Response(JSON.stringify({ response: text }), {
+      headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Chat API error:", error);
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : "Unknown error";
+    console.error("Chat API error:", errMsg);
     return new Response(
       JSON.stringify({ error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }

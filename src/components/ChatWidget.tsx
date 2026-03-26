@@ -33,6 +33,8 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
+      setMessages([...newMessages, { role: "assistant", content: "..." }]);
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,19 +43,8 @@ export default function ChatWidget() {
 
       if (!res.ok) throw new Error("API error");
 
-      const reader = res.body?.getReader();
-      if (!reader) throw new Error("No stream");
-
-      const decoder = new TextDecoder();
-      let assistantText = "";
-      setMessages([...newMessages, { role: "assistant", content: "" }]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        assistantText += decoder.decode(value, { stream: true });
-        setMessages([...newMessages, { role: "assistant", content: assistantText }]);
-      }
+      const data = await res.json();
+      setMessages([...newMessages, { role: "assistant", content: data.response }]);
     } catch {
       setMessages([
         ...newMessages,
