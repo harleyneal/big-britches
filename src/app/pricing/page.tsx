@@ -34,11 +34,11 @@ export default function PricingPage() {
                 Your Business, Online &amp; Running
               </h2>
               <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-4xl font-bold text-[var(--sl-ice)]">$79</span>
+                <span className="text-4xl font-bold text-[var(--sl-ice)]">$37</span>
                 <span className="text-[var(--sl-ice)]">/month</span>
               </div>
               <p className="text-[var(--sl-ice)] text-sm mb-4">
-                One-time setup deposit: <span className="font-semibold">$499–$999</span>
+                One-time setup deposit: <span className="font-semibold">$300</span>
               </p>
             </div>
 
@@ -51,6 +51,7 @@ export default function PricingPage() {
                 "Order & job tracking",
                 "E-commerce ready (product catalog, cart, checkout)",
                 "AI chatbot trained on your content",
+                "AI-written blog posts published twice a week",
                 "Blog / content management system",
                 "SEO setup, sitemap, schema & performance analytics",
                 "Google Analytics integration",

@@ -36,6 +36,7 @@ const planFeatures = [
   "Stripe payments & invoicing",
   "E-commerce ready",
   "AI chatbot trained on your content",
+  "AI-written blog posts, published twice a week",
   "SEO, sitemap & performance analytics",
   "Cloud hosting, maintenance & updates included",
 ];
@@ -129,10 +130,10 @@ export default function Home() {
               <div className="mb-6">
                 <p className="text-[var(--sl-lime)] text-xs font-semibold uppercase tracking-widest mb-2">The Big Britches Plan</p>
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-bold text-[var(--sl-ice)]">$79</span>
+                  <span className="text-4xl font-bold text-[var(--sl-ice)]">$37</span>
                   <span className="text-[var(--sl-ice)]">/month</span>
                 </div>
-                <p className="text-[var(--sl-ice)]/60 text-sm">One-time setup deposit: $499–$999</p>
+                <p className="text-[var(--sl-ice)]/60 text-sm">One-time setup deposit: $300</p>
               </div>
 
               <ul className="space-y-3 mb-8">
