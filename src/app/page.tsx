@@ -29,6 +29,17 @@ const steps = [
   { num: "03", title: "You Run Your Business", desc: "Your site goes live. We handle hosting, updates, and maintenance. You focus on the stuff you're actually good at." },
 ];
 
+const planFeatures = [
+  "Custom-designed, mobile-responsive website",
+  "Admin dashboard with analytics",
+  "Online scheduling & automated reminders",
+  "Stripe payments & invoicing",
+  "E-commerce ready",
+  "AI chatbot trained on your content",
+  "SEO, sitemap & performance analytics",
+  "Cloud hosting, maintenance & updates included",
+];
+
 export default function Home() {
   return (
     <>
@@ -51,7 +62,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
               className="px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full font-semibold text-lg hover:brightness-110 hover:scale-[1.04] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
-              See Our Plans
+              See Our Plan
             </Link>
             <Link href="/services"
               className="px-8 py-4 border border-[var(--sl-ice)]/20 text-[var(--sl-ice)] rounded-full font-semibold text-lg hover:bg-[var(--sl-ice)]/10 hover:scale-[1.04] active:scale-[0.98] transition-all duration-200">
@@ -99,6 +110,47 @@ export default function Home() {
                 <p className="text-[var(--sl-ice)]/80 leading-relaxed">{s.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Card */}
+      <section className="py-24 bg-[var(--sl-ice)]">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <p className="text-[var(--sl-blue)] font-semibold text-sm uppercase tracking-wider mb-3">Simple Pricing</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-[var(--sl-navy)]">One Plan. Everything Included.</h2>
+          </div>
+          <div className="max-w-xl mx-auto">
+            <div className="relative border-2 border-[var(--sl-lime)] rounded-2xl bg-[var(--sl-navy)] p-8 md:p-10 shadow-xl">
+              <div className="absolute -top-4 left-8 bg-[var(--sl-lime)] text-[var(--sl-navy)] text-xs font-bold uppercase px-4 py-1 rounded-full">
+                Everything You Need
+              </div>
+              <div className="mb-6">
+                <p className="text-[var(--sl-lime)] text-xs font-semibold uppercase tracking-widest mb-2">The Big Britches Plan</p>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-4xl font-bold text-[var(--sl-ice)]">$79</span>
+                  <span className="text-[var(--sl-ice)]">/month</span>
+                </div>
+                <p className="text-[var(--sl-ice)]/60 text-sm">One-time setup deposit: $499–$999</p>
+              </div>
+
+              <ul className="space-y-3 mb-8">
+                {planFeatures.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
+                    <span className="text-[var(--sl-ice)]">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href="/pricing" className="block w-full text-center bg-[var(--sl-lime)] text-[var(--sl-navy)] font-semibold py-3.5 px-6 rounded-full hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-lime)]/20 active:scale-[0.98] transition-all duration-200">
+                See Full Details
+              </Link>
+            </div>
+            <p className="text-center mt-6 text-[var(--sl-navy)]/60 text-sm">
+              Need something custom? <Link href="/contact" className="text-[var(--sl-blue)] font-semibold hover:underline">Let&apos;s talk.</Link>
+            </p>
           </div>
         </div>
       </section>

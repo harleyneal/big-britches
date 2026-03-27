@@ -12,91 +12,49 @@ export default function PricingPage() {
           One Price. The Whole Enchilada.
         </h1>
         <p className="text-lg text-[var(--sl-ice)] max-w-2xl mx-auto">
-          A small deposit to get the ball rolling, then a simple monthly subscription that covers everything — website, dashboard, tools, hosting, maintenance. No surprise invoices. No nickel-and-diming.
+          A small deposit to get the ball rolling, then a simple monthly subscription
+          that covers everything — website, dashboard, tools, hosting, maintenance.
+          No surprise invoices. No nickel-and-diming.
         </p>
       </div>
 
-      {/* Pricing Cards Section */}
+      {/* Pricing Card Section */}
       <div className="px-4 py-16 md:py-24">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-          {/* Startup Tier */}
-          <div className="relative border-2 border-[var(--sl-blue)] rounded-2xl bg-[var(--sl-ice)] p-8 md:p-10">
-            <div className="mb-8">
-              <p className="text-[var(--sl-navy)] text-xs font-semibold uppercase tracking-widest mb-2">
-                Startup
-              </p>
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--sl-navy)] mb-4">
-                For Businesses Just Getting Started
-              </h2>
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-4xl font-bold text-[var(--sl-navy)]">$29</span>
-                <span className="text-[var(--sl-navy)]">/month</span>
-              </div>
-              <p className="text-[var(--sl-navy)] text-sm mb-4">
-                Deposit: <span className="font-semibold">$299–$499</span>
-              </p>
-            </div>
-
-            <ul className="space-y-3 mb-10">
-              {[
-                "Custom-designed, mobile-responsive website (up to 5 pages)",
-                "Admin dashboard with business overview",
-                "Online scheduling & booking page",
-                "Stripe payment processing",
-                "Basic invoicing",
-                "Order & job tracking",
-                "AI chatbot for customer inquiries",
-                "Basic SEO setup (meta tags, sitemap, schema)",
-                "Google Analytics integration",
-                "Cloud hosting, maintenance & security updates included",
-                "Email & chat support (24-hr response)",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
-                  <span className="text-[var(--sl-navy)]">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Link href="/contact" className="block w-full text-center bg-[var(--sl-blue)] text-[var(--sl-ice)] font-semibold py-3.5 px-6 rounded-full hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
-              Get Started
-            </Link>
-          </div>
-
-          {/* Business Tier */}
+        <div className="max-w-xl mx-auto">
           <div className="relative border-2 border-[var(--sl-lime)] rounded-2xl bg-[var(--sl-navy)] p-8 md:p-10 shadow-xl">
             <div className="absolute -top-4 left-8 bg-[var(--sl-lime)] text-[var(--sl-navy)] text-xs font-bold uppercase px-4 py-1 rounded-full">
-              Most Popular
+              Everything You Need
             </div>
 
             <div className="mb-8">
               <p className="text-[var(--sl-lime)] text-xs font-semibold uppercase tracking-widest mb-2">
-                Business
+                The Big Britches Plan
               </p>
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--sl-ice)] mb-4">
-                For Businesses Ready to Level Up
+                Your Business, Online &amp; Running
               </h2>
               <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-4xl font-bold text-[var(--sl-ice)]">$79–$99</span>
+                <span className="text-4xl font-bold text-[var(--sl-ice)]">$79</span>
                 <span className="text-[var(--sl-ice)]">/month</span>
               </div>
               <p className="text-[var(--sl-ice)] text-sm mb-4">
-                Deposit: <span className="font-semibold">$599–$999</span>
+                One-time setup deposit: <span className="font-semibold">$499–$999</span>
               </p>
             </div>
 
             <ul className="space-y-3 mb-10">
               {[
-                "Everything in Startup, plus:",
-                "Expanded website (15+ pages) or custom web application",
-                "Advanced admin dashboard with analytics",
-                "E-commerce (product catalog, cart, checkout)",
-                "Advanced invoicing & revenue reports",
-                "Custom booking flows & automated reminders",
-                "AI chatbot with custom training on your content",
-                "Advanced SEO & performance analytics",
+                "Custom-designed, mobile-responsive website (up to 15 pages)",
+                "Admin dashboard with analytics & business overview",
+                "Online scheduling & booking with automated reminders",
+                "Stripe payment processing & invoicing",
+                "Order & job tracking",
+                "E-commerce ready (product catalog, cart, checkout)",
+                "AI chatbot trained on your content",
                 "Blog / content management system",
-                "User authentication & member areas",
+                "SEO setup, sitemap, schema & performance analytics",
+                "Google Analytics integration",
+                "Cloud hosting, maintenance & security updates included",
                 "Email & chat support (24-hr response)",
                 "Quarterly performance review & optimization",
               ].map((item) => (
@@ -111,6 +69,22 @@ export default function PricingPage() {
               Get Started
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* Custom Projects CTA */}
+      <div className="px-4 py-16 md:py-20 border-t border-[var(--sl-ice)]/10">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-[var(--sl-ice)] mb-4">
+            Need Something Custom?
+          </h2>
+          <p className="text-[var(--sl-ice)]/80 text-lg mb-8 leading-relaxed">
+            Got a bigger project in mind — a custom web app, advanced integrations,
+            or something we haven&apos;t thought of yet? Let&apos;s talk. We love a good challenge.
+          </p>
+          <Link href="/contact" className="inline-block px-8 py-4 border-2 border-[var(--sl-lime)] text-[var(--sl-lime)] rounded-full font-semibold text-lg hover:bg-[var(--sl-lime)]/10 hover:scale-[1.04] active:scale-[0.98] transition-all duration-200">
+            Let&apos;s Talk
+          </Link>
         </div>
       </div>
 
@@ -139,7 +113,7 @@ export default function PricingPage() {
             <div className="border-b border-[var(--sl-blue)] pb-6">
               <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">How fast can I get up and running?</h3>
               <p className="text-[var(--sl-ice)]">
-                Startup sites usually ship in 1–2 weeks. Business tier projects with e-commerce or custom features take 2–4 weeks. Either way, faster than you&apos;d expect.
+                Most projects launch in 1–3 weeks depending on scope. Either way, faster than you&apos;d expect.
               </p>
             </div>
 
