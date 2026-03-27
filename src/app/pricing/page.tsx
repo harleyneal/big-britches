@@ -20,7 +20,7 @@ export default function PricingPage() {
       <div className="px-4 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
           {/* Startup Tier */}
-          <div className="relative border-2 border-[var(--sl-blue)] rounded-lg bg-[var(--sl-ice)] p-8 md:p-10">
+          <div className="relative border-2 border-[var(--sl-blue)] rounded-2xl bg-[var(--sl-ice)] p-8 md:p-10">
             <div className="mb-8">
               <p className="text-[var(--sl-navy)] text-xs font-semibold uppercase tracking-widest mb-2">
                 Startup
@@ -58,13 +58,13 @@ export default function PricingPage() {
               ))}
             </ul>
 
-            <Link href="/contact" className="block w-full text-center bg-[var(--sl-blue)] text-[var(--sl-ice)] font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+            <Link href="/contact" className="block w-full text-center bg-[var(--sl-blue)] text-[var(--sl-ice)] font-semibold py-3.5 px-6 rounded-full hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
               Get Started
             </Link>
           </div>
 
           {/* Business Tier */}
-          <div className="relative border-2 border-[var(--sl-lime)] rounded-lg bg-[var(--sl-navy)] p-8 md:p-10 shadow-xl">
+          <div className="relative border-2 border-[var(--sl-lime)] rounded-2xl bg-[var(--sl-navy)] p-8 md:p-10 shadow-xl">
             <div className="absolute -top-4 left-8 bg-[var(--sl-lime)] text-[var(--sl-navy)] text-xs font-bold uppercase px-4 py-1 rounded-full">
               Most Popular
             </div>
@@ -107,7 +107,7 @@ export default function PricingPage() {
               ))}
             </ul>
 
-            <Link href="/contact" className="block w-full text-center bg-[var(--sl-lime)] text-[var(--sl-navy)] font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+            <Link href="/contact" className="block w-full text-center bg-[var(--sl-lime)] text-[var(--sl-navy)] font-semibold py-3.5 px-6 rounded-full hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-lime)]/20 active:scale-[0.98] transition-all duration-200">
               Get Started
             </Link>
           </div>

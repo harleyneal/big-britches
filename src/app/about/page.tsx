@@ -66,7 +66,7 @@ export default function About() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--sl-ice)] mb-6">Let&apos;s Build Something You&apos;re Proud Of</h2>
           <p className="text-[var(--sl-ice)]/80 text-lg mb-10">Tell us about your business. We&apos;ll tell you how we can help. No pressure, no nonsense.</p>
-          <Link href="/contact" className="inline-block px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
+          <Link href="/contact" className="inline-block px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full font-semibold text-lg hover:brightness-110 hover:scale-[1.04] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
             Get In Touch
           </Link>
         </div>

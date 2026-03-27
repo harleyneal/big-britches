@@ -69,7 +69,7 @@ export default function Contact() {
                     className="w-full px-4 py-3 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all resize-none" />
                 </div>
                 <button type="submit"
-                  className="w-full px-6 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-bold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-[1.02] shadow-lg shadow-[var(--sl-blue)]/25">
+                  className="w-full px-6 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full font-bold text-lg hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
                   Send It
                 </button>
               </form>

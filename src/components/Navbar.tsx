@@ -30,7 +30,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link href="/contact"
-            className="px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-lg text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
+            className="px-6 py-2.5 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full text-sm font-semibold hover:brightness-110 hover:scale-[1.04] hover:shadow-md hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
             Get Started
           </Link>
         </div>
@@ -46,17 +46,22 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-[var(--sl-navy)] border-t border-[var(--sl-ice)]/10 px-6 py-4 space-y-3">
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
-              className="block text-[var(--sl-ice)]/70 hover:text-[var(--sl-lime)] transition-colors text-sm font-medium py-2">
-              {link.label}
+        <div className="md:hidden mobile-menu-enter bg-[var(--sl-navy)]/90 backdrop-blur-xl border-t border-[var(--sl-ice)]/10 px-6 pt-6 pb-8">
+          <div className="space-y-1">
+            {navLinks.map((link, i) => (
+              <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
+                className="mobile-menu-item block text-[var(--sl-ice)]/80 hover:text-[var(--sl-ice)] hover:bg-[var(--sl-ice)]/5 transition-all duration-200 text-base font-medium py-3 px-4 rounded-xl"
+                style={{ animationDelay: `${i * 50}ms` }}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-5 pt-5 border-t border-[var(--sl-ice)]/10 mobile-menu-item" style={{ animationDelay: `${navLinks.length * 50}ms` }}>
+            <Link href="/contact" onClick={() => setMobileOpen(false)}
+              className="block py-3.5 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full text-base font-semibold text-center hover:brightness-110 active:scale-[0.98] transition-all duration-200">
+              Get Started
             </Link>
-          ))}
-          <Link href="/contact" onClick={() => setMobileOpen(false)}
-            className="block px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-lg text-sm font-semibold text-center">
-            Get Started
-          </Link>
+          </div>
         </div>
       )}
     </nav>

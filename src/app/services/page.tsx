@@ -141,10 +141,10 @@ export default function ServicesPage() {
             Tell us about your business and we&apos;ll put together the perfect setup. No commitment, no hard sell — just a conversation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/pricing" className="px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90" style={{ backgroundColor: "var(--sl-lime)", color: "var(--sl-navy)" }}>
+            <Link href="/pricing" className="px-8 py-3.5 rounded-full font-semibold hover:brightness-110 hover:scale-[1.04] hover:shadow-lg hover:shadow-[var(--sl-lime)]/20 active:scale-[0.98] transition-all duration-200" style={{ backgroundColor: "var(--sl-lime)", color: "var(--sl-navy)" }}>
               View Pricing
             </Link>
-            <Link href="/contact" className="px-8 py-3 rounded-lg font-semibold border-2 transition-all duration-300 hover:opacity-90" style={{ borderColor: "var(--sl-lime)", color: "var(--sl-lime)" }}>
+            <Link href="/contact" className="px-8 py-3.5 rounded-full font-semibold border-2 hover:scale-[1.04] active:scale-[0.98] transition-all duration-200" style={{ borderColor: "var(--sl-lime)", color: "var(--sl-lime)" }}>
               Let&apos;s Talk
             </Link>
           </div>

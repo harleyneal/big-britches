@@ -50,11 +50,11 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
-              className="px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-xl font-semibold text-lg hover:bg-[var(--sl-blue)]/80 transition-all hover:scale-105 shadow-lg shadow-[var(--sl-blue)]/25">
+              className="px-8 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full font-semibold text-lg hover:brightness-110 hover:scale-[1.04] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
               See Our Plans
             </Link>
             <Link href="/services"
-              className="px-8 py-4 border border-[var(--sl-ice)]/20 text-[var(--sl-ice)] rounded-xl font-semibold text-lg hover:bg-[var(--sl-ice)]/10 transition-all">
+              className="px-8 py-4 border border-[var(--sl-ice)]/20 text-[var(--sl-ice)] rounded-full font-semibold text-lg hover:bg-[var(--sl-ice)]/10 hover:scale-[1.04] active:scale-[0.98] transition-all duration-200">
               What&apos;s Included
             </Link>
           </div>
@@ -112,11 +112,11 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing"
-              className="px-8 py-4 bg-[var(--sl-navy)] text-[var(--sl-ice)] rounded-xl font-bold text-lg hover:bg-[var(--sl-ice)]/90 transition-all hover:scale-105 shadow-lg">
+              className="px-8 py-4 bg-[var(--sl-navy)] text-[var(--sl-ice)] rounded-full font-bold text-lg hover:brightness-125 hover:scale-[1.04] hover:shadow-lg hover:shadow-[var(--sl-navy)]/20 active:scale-[0.98] transition-all duration-200">
               View Pricing
             </Link>
             <Link href="/contact"
-              className="px-8 py-4 border-2 border-[var(--sl-navy)] text-[var(--sl-navy)] rounded-xl font-bold text-lg hover:bg-[var(--sl-navy)]/10 transition-all">
+              className="px-8 py-4 border-2 border-[var(--sl-navy)] text-[var(--sl-navy)] rounded-full font-bold text-lg hover:bg-[var(--sl-navy)]/10 hover:scale-[1.04] active:scale-[0.98] transition-all duration-200">
               Let&apos;s Talk
             </Link>
           </div>
