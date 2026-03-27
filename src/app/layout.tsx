@@ -31,6 +31,25 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={inter.variable}>
       <body className="antialiased bg-[var(--sl-ice)] text-[var(--sl-navy)]">
         <ParticleBackground />
+        {/* Global half-face watermark — fixed on every page */}
+        <div
+          className="fixed top-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            left: '-18vw',
+            width: '65vh',
+            height: '68vh',
+            opacity: 0.06,
+            zIndex: 5,
+          }}
+        >
+          <img
+            src="/symbol.svg"
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-contain"
+            style={{ filter: 'brightness(3)' }}
+          />
+        </div>
         <Navbar />
         <main className="relative">{children}</main>
         <Footer />
