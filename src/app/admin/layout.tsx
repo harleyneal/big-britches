@@ -14,10 +14,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--sl-ice)]">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-[var(--sl-ice)] pt-20">
+      {/* Sidebar — offset below the site navbar (h-20 = 80px) */}
       <aside
-        className={`fixed left-0 top-0 h-screen bg-[var(--sl-navy)] text-white transition-all duration-300 ${
+        className={`fixed left-0 top-20 h-[calc(100vh-5rem)] bg-[var(--sl-navy)] text-white transition-all duration-300 z-40 ${
           sidebarOpen ? "w-64" : "w-20"
         }`}
       >
