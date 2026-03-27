@@ -6,13 +6,13 @@ export default function PricingPage() {
       {/* Header Section */}
       <div className="px-4 py-16 md:py-24 text-center border-b border-[var(--sl-ice)]">
         <p className="text-[var(--sl-lime)] text-sm font-semibold uppercase tracking-wide mb-4">
-          Simple, Transparent Pricing
+          Pricing That Makes Sense
         </p>
         <h1 className="text-4xl md:text-5xl font-bold text-[var(--sl-ice)] mb-6">
-          One Subscription. Everything Included.
+          One Price. The Whole Enchilada.
         </h1>
         <p className="text-lg text-[var(--sl-ice)] max-w-2xl mx-auto">
-          A small deposit to get started, then a simple monthly subscription that covers your website, dashboard, scheduling, payments, and AI tools. No hidden fees.
+          A small deposit to get the ball rolling, then a simple monthly subscription that covers everything — website, dashboard, tools, hosting, maintenance. No surprise invoices. No nickel-and-diming.
         </p>
       </div>
 
@@ -26,7 +26,7 @@ export default function PricingPage() {
                 Startup
               </p>
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--sl-navy)] mb-4">
-                For New & Small Businesses
+                For Businesses Just Getting Started
               </h2>
               <div className="flex items-baseline gap-2 mb-6">
                 <span className="text-4xl font-bold text-[var(--sl-navy)]">$29</span>
@@ -38,55 +38,29 @@ export default function PricingPage() {
             </div>
 
             <ul className="space-y-3 mb-10">
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Custom-designed, mobile-responsive website (up to 5 pages)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Admin dashboard with business overview</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Online scheduling & booking page</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Stripe payment processing</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Basic invoicing</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Order & job tracking</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">AI chatbot for customer inquiries</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Basic SEO setup (meta tags, sitemap, schema)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Google Analytics integration</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Cloud hosting, maintenance & security updates included</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-navy)]">Email Email & chat support (48-hr response) chat support (24-hr response)</span>
-              </li>
+              {[
+                "Custom-designed, mobile-responsive website (up to 5 pages)",
+                "Admin dashboard with business overview",
+                "Online scheduling & booking page",
+                "Stripe payment processing",
+                "Basic invoicing",
+                "Order & job tracking",
+                "AI chatbot for customer inquiries",
+                "Basic SEO setup (meta tags, sitemap, schema)",
+                "Google Analytics integration",
+                "Cloud hosting, maintenance & security updates included",
+                "Email & chat support (24-hr response)",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
+                  <span className="text-[var(--sl-navy)]">{item}</span>
+                </li>
+              ))}
             </ul>
 
-            <button className="w-full bg-[var(--sl-blue)] text-[var(--sl-ice)] font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+            <Link href="/contact" className="block w-full text-center bg-[var(--sl-blue)] text-[var(--sl-ice)] font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
               Get Started
-            </button>
+            </Link>
           </div>
 
           {/* Business Tier */}
@@ -100,7 +74,7 @@ export default function PricingPage() {
                 Business
               </p>
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--sl-ice)] mb-4">
-                For Growing Companies
+                For Businesses Ready to Level Up
               </h2>
               <div className="flex items-baseline gap-2 mb-6">
                 <span className="text-4xl font-bold text-[var(--sl-ice)]">$79–$99</span>
@@ -112,59 +86,30 @@ export default function PricingPage() {
             </div>
 
             <ul className="space-y-3 mb-10">
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Everything in Startup, plus:</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Expanded website (15+ pages) or custom web application</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Advanced admin dashboard with analytics</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">E-commerce (product catalog, cart, checkout)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Advanced invoicing & revenue reports</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Custom booking flows & automated reminders</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">AI chatbot with custom training on your content</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Advanced SEO & performance analytics</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Blog / content management system</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">User authentication & member areas</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Email & chat support (24-hr response)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">✓</span>
-                <span className="text-[var(--sl-ice)]">Quarterly performance review & optimization</span>
-              </li>
+              {[
+                "Everything in Startup, plus:",
+                "Expanded website (15+ pages) or custom web application",
+                "Advanced admin dashboard with analytics",
+                "E-commerce (product catalog, cart, checkout)",
+                "Advanced invoicing & revenue reports",
+                "Custom booking flows & automated reminders",
+                "AI chatbot with custom training on your content",
+                "Advanced SEO & performance analytics",
+                "Blog / content management system",
+                "User authentication & member areas",
+                "Email & chat support (24-hr response)",
+                "Quarterly performance review & optimization",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
+                  <span className="text-[var(--sl-ice)]">{item}</span>
+                </li>
+              ))}
             </ul>
 
-            <button className="w-full bg-[var(--sl-lime)] text-[var(--sl-navy)] font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+            <Link href="/contact" className="block w-full text-center bg-[var(--sl-lime)] text-[var(--sl-navy)] font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -173,67 +118,49 @@ export default function PricingPage() {
       <div className="px-4 py-16 md:py-24 border-t border-[var(--sl-ice)]">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--sl-ice)] text-center mb-12">
-            Questions? We've Got Answers.
+            The Stuff You&apos;re Probably Wondering
           </h2>
 
           <div className="space-y-8">
-            {/* FAQ Item 1 */}
             <div className="border-b border-[var(--sl-blue)] pb-6">
-              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">
-                What does the deposit cover?
-              </h3>
+              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">What&apos;s the deposit for?</h3>
               <p className="text-[var(--sl-ice)]">
-                The deposit covers the initial design and development of your website and dashboard. It's a one-time payment that kicks off the project — we handle everything from design to launch.
+                It covers the upfront design and development work — building your site from scratch, setting up your dashboard, the whole shebang. It&apos;s a one-time thing, not recurring.
               </p>
             </div>
 
-            {/* FAQ Item 2 */}
             <div className="border-b border-[var(--sl-blue)] pb-6">
-              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">
-                Can I cancel my subscription?
-              </h3>
+              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">Can I cancel anytime?</h3>
               <p className="text-[var(--sl-ice)]">
-                Yes, you can cancel anytime. Your site remains live through the end of your billing period. We don't believe in locking you in — we earn your business every month.
+                Yep. No contracts, no guilt trips. Your site stays live through the end of your billing period. We keep you around by being good at what we do, not by locking you in.
               </p>
             </div>
 
-            {/* FAQ Item 3 */}
             <div className="border-b border-[var(--sl-blue)] pb-6">
-              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">
-                How long does it take to get set up?
-              </h3>
+              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">How fast can I get up and running?</h3>
               <p className="text-[var(--sl-ice)]">
-                Startup sites are typically ready in 1–2 weeks. Business tier projects with e-commerce or custom features take 2–4 weeks depending on complexity.
+                Startup sites usually ship in 1–2 weeks. Business tier projects with e-commerce or custom features take 2–4 weeks. Either way, faster than you&apos;d expect.
               </p>
             </div>
 
-            {/* FAQ Item 4 */}
             <div className="border-b border-[var(--sl-blue)] pb-6">
-              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">
-                Do I own my website?
-              </h3>
+              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">Do I own my website?</h3>
               <p className="text-[var(--sl-ice)]">
-                Absolutely. You own all your content, design assets, and data. If you ever leave, we'll provide a full export of everything.
+                100%. Your content, your design, your data. If you ever leave, we&apos;ll hand everything over. No hostage situations here.
               </p>
             </div>
 
-            {/* FAQ Item 5 */}
             <div className="border-b border-[var(--sl-blue)] pb-6">
-              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">
-                Do I need my own Stripe account?
-              </h3>
+              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">Do I need my own Stripe account?</h3>
               <p className="text-[var(--sl-ice)]">
-                No. We handle the setup through Stripe Connect — your payments flow directly to your bank account, and everything is managed through your dashboard.
+                Nope. We set it up through Stripe Connect — payments go straight to your bank account, and you manage everything from your dashboard. Easy peasy.
               </p>
             </div>
 
-            {/* FAQ Item 6 */}
             <div className="pb-6">
-              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">
-                What if I need changes after launch?
-              </h3>
+              <h3 className="text-lg font-semibold text-[var(--sl-lime)] mb-3">What about changes after launch?</h3>
               <p className="text-[var(--sl-ice)]">
-                Your subscription includes ongoing maintenance and updates. Small content changes are included. Larger feature additions can be scoped as add-on projects.
+                Small tweaks and content updates are included in your subscription. Bigger feature additions? We&apos;ll scope those out as add-on projects with clear pricing. No surprises.
               </p>
             </div>
           </div>

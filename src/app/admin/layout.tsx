@@ -24,8 +24,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex items-center justify-between p-4 border-b border-[var(--sl-blue-20)]">
           {sidebarOpen && (
             <div className="flex flex-col">
-              <h1 className="text-sm font-bold tracking-wider">SNOW LEOPARD</h1>
-              <p className="text-xs text-[var(--sl-blue)]">Labs Admin</p>
+              <h1 className="text-sm font-bold tracking-wider">BIG BRITCHES</h1>
+              <p className="text-xs text-[var(--sl-blue)]">Admin</p>
             </div>
           )}
           <button

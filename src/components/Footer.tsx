@@ -8,10 +8,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-4">
-              <Image src="/logo-dark.svg" alt="Snow Leopard Labs" width={140} height={28} className="h-7 w-auto" />
+              <Image src="/logo-dark.svg" alt="Big Britches" width={140} height={28} className="h-7 w-auto" />
             </Link>
             <p className="text-sm leading-relaxed">
-              Professional web design &amp; development for small businesses. Big impact, simple pricing.
+              Websites and tools for small businesses that mean business. Big impact, small price tag.
             </p>
           </div>
           <div>
@@ -23,9 +23,9 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <h4 className="text-[var(--sl-ice)] font-semibold text-sm mb-4 uppercase tracking-wider">Services</h4>
+            <h4 className="text-[var(--sl-ice)] font-semibold text-sm mb-4 uppercase tracking-wider">Platform</h4>
             <div className="space-y-2">
-              {["Website Design", "Web Applications", "CRM Integration", "E-Commerce", "SEO & Analytics", "AI Tools"].map((item) => (
+              {["Website Design", "Admin Dashboard", "Scheduling", "Payments", "SEO & Analytics", "AI Tools"].map((item) => (
                 <span key={item} className="block text-sm">{item}</span>
               ))}
             </div>
@@ -33,7 +33,7 @@ export default function Footer() {
           <div>
             <h4 className="text-[var(--sl-ice)] font-semibold text-sm mb-4 uppercase tracking-wider">Get In Touch</h4>
             <div className="space-y-2 text-sm">
-              <p>harley@snowleopardllc.io</p>
+              <p>harley@bigbritches.io</p>
               <Link href="/contact" className="inline-block mt-3 px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-lg text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
                 Contact Us
               </Link>
@@ -41,8 +41,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-[var(--sl-ice)]/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs">&copy; {new Date().getFullYear()} Snow Leopard Labs LLC. All rights reserved.</p>
-          <p className="text-xs">Built with purpose in the age of AI.</p>
+          <p className="text-xs">&copy; {new Date().getFullYear()} Big Britches LLC. All rights reserved.</p>
+          <p className="text-xs">Built with good taste and better code.</p>
         </div>
       </div>
     </footer>

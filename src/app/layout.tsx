@@ -12,16 +12,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Snow Leopard Labs LLC | Professional Web Design for Small Businesses",
+  title: "Big Britches LLC | Websites & Tools for Small Businesses That Mean Business",
   description:
-    "Custom web design and development for small businesses. Low deposit, simple monthly subscription, big professional impact.",
-  keywords: ["web design", "small business website", "web development", "affordable web design", "CRM", "e-commerce"],
+    "Custom websites, dashboards, scheduling, payments, and AI tools — all in one ridiculously affordable subscription. We give small business big britches.",
+  keywords: ["web design", "small business website", "web development", "affordable web design", "business dashboard", "AI tools"],
   icons: { icon: "/symbol.svg" },
   openGraph: {
-    title: "Snow Leopard Labs LLC | Professional Web Design for Small Businesses",
-    description: "Custom web design and development for small businesses.",
-    url: "https://www.snowleopardllc.io",
-    siteName: "Snow Leopard Labs LLC",
+    title: "Big Britches LLC | Websites & Tools for Small Businesses That Mean Business",
+    description: "Custom websites, dashboards, scheduling, payments, and AI tools — all in one ridiculously affordable subscription.",
+    url: "https://www.bigbritches.io",
+    siteName: "Big Britches LLC",
     type: "website",
   },
 };
