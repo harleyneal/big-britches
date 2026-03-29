@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ChatWidget from "@/components/ChatWidget";
+import TradingGridOverlay from "@/components/TradingGridOverlay";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={plusJakartaSans.variable}>
       <body className="antialiased bg-[var(--sl-ice)] text-[var(--sl-navy)]">
+        <TradingGridOverlay />
         <ParticleBackground />
         {/* Global half-face watermark — fixed on every page */}
         <div
