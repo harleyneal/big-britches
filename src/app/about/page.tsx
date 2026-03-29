@@ -38,7 +38,7 @@ export default function About() {
               </p>
             </div>
             <div className="bg-[var(--sl-ice)] rounded-2xl p-10 text-center">
-              <img src="/symbol-dark.svg" alt="Big Britches symbol" className="w-20 h-20 mx-auto mb-3 opacity-20" />
+              <img src="/symbol-light.svg" alt="Big Britches symbol" className="w-20 h-20 mx-auto mb-3 opacity-20" />
               <p className="text-[var(--sl-navy)] font-bold text-lg">Big Britches LLC</p>
               <p className="text-[var(--sl-navy)]/50 text-sm mt-1">Websites & Tools for Small Business</p>
             </div>
