@@ -16,9 +16,9 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--sl-navy)]/95 backdrop-blur-md border-b border-[var(--sl-ice)]/10">
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-24">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo-dark.svg" alt="Big Britches" width={220} height={45} className="h-11 w-auto" />
+          <Image src="/logo-dark.svg" alt="Big Britches" width={275} height={56} className="h-14 w-auto" />
         </Link>
 
         {/* Desktop nav */}

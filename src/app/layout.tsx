@@ -17,7 +17,12 @@ export const metadata: Metadata = {
   description:
     "Custom websites, dashboards, scheduling, payments, and AI tools — all in one ridiculously affordable subscription. We give small business big britches.",
   keywords: ["web design", "small business website", "web development", "affordable web design", "business dashboard", "AI tools"],
-  icons: { icon: "/symbol.svg" },
+  icons: {
+    icon: [
+      { url: "/symbol-dark.svg", media: "(prefers-color-scheme: light)" },
+      { url: "/symbol-light.svg", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
   openGraph: {
     title: "Big Britches LLC | Websites & Tools for Small Businesses That Mean Business",
     description: "Custom websites, dashboards, scheduling, payments, and AI tools — all in one ridiculously affordable subscription.",
