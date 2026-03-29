@@ -48,7 +48,7 @@ export default function ChatWidget() {
     } catch {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "Sorry, something went wrong. Please try again or email us at harley@snowleopardllc.io." },
+        { role: "assistant", content: "Sorry, something went wrong. Please try again or email us at team@bigbritches.io." },
       ]);
     } finally {
       setLoading(false);
@@ -90,7 +90,7 @@ export default function ChatWidget() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-semibold" style={{ color: "var(--sl-ice)" }}>Snow Leopard Labs</p>
+                <p className="text-sm font-semibold" style={{ color: "var(--sl-ice)" }}>Big Britches</p>
                 <p className="text-xs" style={{ color: "rgba(235, 243, 247, 0.6)" }}>Usually replies instantly</p>
               </div>
             </div>
