@@ -33,7 +33,7 @@ export default function Footer() {
           <div>
             <h4 className="text-[var(--sl-ice)] font-semibold text-sm mb-4 uppercase tracking-wider">Get In Touch</h4>
             <div className="space-y-2 text-sm">
-              <p>harley@bigbritches.io</p>
+              <p>team@bigbritches.io</p>
               <Link href="/contact" className="inline-block mt-3 px-5 py-2 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full text-sm font-semibold hover:bg-[var(--sl-blue)]/80 transition-colors">
                 Contact Us
               </Link>
