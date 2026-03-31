@@ -18,10 +18,16 @@ export default function Contact() {
     setSending(true);
     setError("");
     try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("business", business);
+      formData.append("message", message);
+      files.forEach((file) => formData.append("files", file));
+
       const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, business, message }),
+        body: formData,
       });
       if (!res.ok) throw new Error("Failed to send");
       setSubmitted(true);
