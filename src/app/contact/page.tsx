@@ -3,13 +3,33 @@ import { useState, useRef, useCallback } from "react";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [business, setBusiness] = useState("");
+  const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, business, message }),
+      });
+      if (!res.ok) throw new Error("Failed to send");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again or email us directly at team@bigbritches.io.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -85,23 +105,23 @@ export default function Contact() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Name</label>
-                    <input type="text" required placeholder="Your name"
+                    <input type="text" required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)}
                       className="w-full px-5 py-4 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all text-base" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Email</label>
-                    <input type="email" required placeholder="you@company.com"
+                    <input type="email" required placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-5 py-4 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all text-base" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Business Name</label>
-                  <input type="text" placeholder="Your business name"
+                  <input type="text" placeholder="Your business name" value={business} onChange={(e) => setBusiness(e.target.value)}
                     className="w-full px-5 py-4 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all text-base" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Tell us about your project</label>
-                  <textarea rows={10} required placeholder="What does your business do? What type of look and feel are you going for your site? How do you want this site to work for you? The more details the better, so we can put together something that helps you be successful."
+                  <textarea rows={10} required placeholder="What does your business do? What type of look and feel are you going for your site? How do you want this site to work for you? The more details the better, so we can put together something that helps you succeed." value={message} onChange={(e) => setMessage(e.target.value)}
                     className="w-full px-5 py-4 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all resize-y text-base min-h-[200px]" />
                 </div>
 
@@ -159,9 +179,12 @@ export default function Contact() {
                   )}
                 </div>
 
-                <button type="submit"
-                  className="w-full px-6 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full font-bold text-lg hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200">
-                  Send It
+                {error && (
+                  <p className="text-red-500 text-sm text-center">{error}</p>
+                )}
+                <button type="submit" disabled={sending}
+                  className="w-full px-6 py-4 bg-[var(--sl-blue)] text-[var(--sl-ice)] rounded-full font-bold text-lg hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-blue)]/20 active:scale-[0.98] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed">
+                  {sending ? "Sending..." : "Send It"}
                 </button>
               </form>
             )}
