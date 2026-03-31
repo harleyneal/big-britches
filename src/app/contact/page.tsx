@@ -23,10 +23,14 @@ export default function Contact() {
       const uploadedFiles: { name: string; path: string; size: number }[] = [];
 
       if (files.length > 0) {
-        const supabase = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseKey) {
+          throw new Error("File upload configuration missing. Please contact us directly at team@bigbritches.io.");
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseKey);
         const timestamp = Date.now();
         const folder = `${timestamp}-${name.replace(/[^a-zA-Z0-9]/g, "_")}`;
 
@@ -37,8 +41,8 @@ export default function Contact() {
             .upload(filePath, file, { upsert: false });
 
           if (uploadError) {
-            console.error("Upload error:", uploadError);
-            continue;
+            console.error("Upload error for file:", file.name, uploadError);
+            throw new Error(`Failed to upload ${file.name}: ${uploadError.message}`);
           }
           uploadedFiles.push({ name: file.name, path: filePath, size: file.size });
         }
@@ -58,8 +62,10 @@ export default function Contact() {
       });
       if (!res.ok) throw new Error("Failed to send");
       setSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again or email us directly at team@bigbritches.io.");
+    } catch (err) {
+      console.error("Contact form error:", err);
+      const detail = err instanceof Error ? err.message : String(err);
+      setError(`Something went wrong (${detail}). Please try again or email us directly at team@bigbritches.io.`);
     } finally {
       setSending(false);
     }
