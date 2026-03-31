@@ -59,8 +59,8 @@ export default function PricingPage() {
                 "Email & chat support (24-hr response)",
 
               ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
+                <li key={item} className="flex items-center gap-3">
+                  <span className="text-[var(--sl-lime)] font-bold text-lg leading-none">&#10003;</span>
                   <span className="text-[var(--sl-ice)]">{item}</span>
                 </li>
               ))}

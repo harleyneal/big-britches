@@ -37,7 +37,7 @@ const planFeatures = [
   "E-commerce ready",
   "AI chatbot trained on your content",
   "AI-written blog posts, published twice a week",
-  "SEO, sitemap & performance analytics",
+  "SEO, schema & performance analytics",
   "Cloud hosting, maintenance & updates included",
 ];
 
@@ -138,8 +138,8 @@ export default function Home() {
 
               <ul className="space-y-3 mb-8">
                 {planFeatures.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
+                  <li key={item} className="flex items-center gap-3">
+                    <span className="text-[var(--sl-lime)] font-bold text-lg leading-none">&#10003;</span>
                     <span className="text-[var(--sl-ice)]">{item}</span>
                   </li>
                 ))}
@@ -157,8 +157,9 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-[var(--sl-blue)]/20">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+      <section className="relative z-10 py-24 bg-[var(--sl-ice)]">
+        <div className="absolute inset-0 bg-[var(--sl-blue)]/20" />
+        <div className="relative max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-5xl font-bold text-[var(--sl-navy)] mb-6">Ready to Look Like You Mean Business?</h2>
           <p className="text-[var(--sl-navy)]/70 text-lg mb-10 max-w-xl mx-auto">
             A professional website, a killer dashboard, and all the tools to run your business online — for less than your monthly coffee habit. Probably.
