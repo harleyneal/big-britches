@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -18,16 +19,42 @@ export default function Contact() {
     setSending(true);
     setError("");
     try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("business", business);
-      formData.append("message", message);
-      files.forEach((file) => formData.append("files", file));
+      // Upload files directly to Supabase Storage from the browser
+      const uploadedFiles: { name: string; path: string; size: number }[] = [];
 
+      if (files.length > 0) {
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        const timestamp = Date.now();
+        const folder = `${timestamp}-${name.replace(/[^a-zA-Z0-9]/g, "_")}`;
+
+        for (const file of files) {
+          const filePath = `${folder}/${file.name}`;
+          const { error: uploadError } = await supabase.storage
+            .from("contact-attachments")
+            .upload(filePath, file, { upsert: false });
+
+          if (uploadError) {
+            console.error("Upload error:", uploadError);
+            continue;
+          }
+          uploadedFiles.push({ name: file.name, path: filePath, size: file.size });
+        }
+      }
+
+      // Send text fields + file references to API route
       const res = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          business,
+          message,
+          files: uploadedFiles,
+        }),
       });
       if (!res.ok) throw new Error("Failed to send");
       setSubmitted(true);
