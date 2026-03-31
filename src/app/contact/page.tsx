@@ -66,12 +66,19 @@ export default function Contact() {
           {/* Form */}
           <div>
             {submitted ? (
-              <div className="bg-[var(--sl-lime)]/10 border border-[var(--sl-lime)]/30 rounded-2xl p-10 text-center">
+              <div className="bg-[var(--sl-navy)] rounded-2xl p-10 text-center">
                 <svg className="w-16 h-16 text-[var(--sl-lime)] mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                 </svg>
-                <h3 className="text-2xl font-bold text-[var(--sl-navy)] mb-2">Got It!</h3>
-                <p className="text-[var(--sl-navy)]/60">Thanks for reaching out. We&apos;ll get back to you within 24 hours — usually sooner.</p>
+                <h3 className="text-2xl font-bold text-[var(--sl-ice)] mb-3">Your Britches Are About to Get Bigger.</h3>
+                <p className="text-[var(--sl-ice)]/60 mb-8">Place your deposit to get things moving.</p>
+                <button
+                  className="w-full px-6 py-4 bg-[var(--sl-lime)] text-[var(--sl-navy)] rounded-full font-bold text-lg hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-lime)]/20 active:scale-[0.98] transition-all duration-200 mb-4"
+                  onClick={() => {/* Stripe checkout will go here */}}
+                >
+                  Place $300 Deposit
+                </button>
+                <p className="text-[var(--sl-ice)]/40 text-xs">Secure payment powered by Stripe</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
@@ -94,7 +101,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Tell us about your project</label>
-                  <textarea rows={10} required placeholder="What does your business do? What's driving you nuts about your current setup? What would make your life easier? The more detail the better — we're all ears."
+                  <textarea rows={10} required placeholder="What does your business do? What type of look and feel are you going for your site? How do you want this site to work for you? The more details the better, so we can put together something that helps you be successful."
                     className="w-full px-5 py-4 rounded-xl border border-[var(--sl-navy)]/15 focus:border-[var(--sl-blue)] focus:ring-2 focus:ring-[var(--sl-blue)]/20 outline-none transition-all resize-y text-base min-h-[200px]" />
                 </div>
 
@@ -184,9 +191,8 @@ export default function Contact() {
               <h3 className="font-bold text-[var(--sl-navy)] mb-3">What happens after you hit send?</h3>
               <ol className="space-y-3 text-sm text-[var(--sl-navy)]/60">
                 <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">1.</span> We read your message (like, actually read it)</li>
-                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">2.</span> We put together a custom plan for your business</li>
-                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">3.</span> We send you a proposal — no surprises, no hidden costs</li>
-                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">4.</span> You say the word, and we start building</li>
+                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">2.</span> We put together a website layout for you to look over</li>
+                <li className="flex gap-3"><span className="font-bold text-[var(--sl-blue)]">3.</span> You say the word and we start building</li>
               </ol>
             </div>
           </div>
