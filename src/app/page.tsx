@@ -138,9 +138,9 @@ export default function Home() {
 
               <ul className="space-y-3 mb-8">
                 {planFeatures.map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <span className="text-[var(--sl-lime)] font-bold text-lg leading-none">&#10003;</span>
-                    <span className="text-[var(--sl-ice)]">{item}</span>
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="text-[var(--sl-lime)] font-bold text-lg leading-6 shrink-0">&#10003;</span>
+                    <span className="text-[var(--sl-ice)] leading-6">{item}</span>
                   </li>
                 ))}
               </ul>
