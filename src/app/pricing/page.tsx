@@ -44,7 +44,7 @@ export default function PricingPage() {
 
             <ul className="space-y-3 mb-10">
               {[
-                "Custom-designed, mobile-responsive website (up to 15 pages)",
+                "Custom-designed, mobile-responsive website (up to 10 pages)",
                 "Admin dashboard with analytics & business overview",
                 "Online scheduling & booking with automated reminders",
                 "Stripe payment processing & invoicing",
@@ -53,11 +53,11 @@ export default function PricingPage() {
                 "AI chatbot trained on your content",
                 "AI-written blog posts published twice a week",
                 "Blog / content management system",
-                "SEO setup, sitemap, schema & performance analytics",
+                "SEO setup, schema & performance analytics",
                 "Google Analytics integration",
                 "Cloud hosting, maintenance & security updates included",
                 "Email & chat support (24-hr response)",
-                "Quarterly performance review & optimization",
+
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <span className="text-[var(--sl-lime)] font-bold text-lg mt-0.5">&#10003;</span>
