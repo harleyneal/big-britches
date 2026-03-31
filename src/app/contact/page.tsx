@@ -35,7 +35,11 @@ export default function Contact() {
         const folder = `${timestamp}-${name.replace(/[^a-zA-Z0-9]/g, "_")}`;
 
         for (const file of files) {
-          const filePath = `${folder}/${file.name}`;
+          // Sanitize filename: keep extension, replace spaces/special chars with underscores
+          const ext = file.name.lastIndexOf(".") > 0 ? file.name.slice(file.name.lastIndexOf(".")) : "";
+          const baseName = file.name.slice(0, file.name.length - ext.length);
+          const sanitizedName = baseName.replace(/[^a-zA-Z0-9_-]/g, "_") + ext;
+          const filePath = `${folder}/${sanitizedName}`;
           const { error: uploadError } = await supabase.storage
             .from("contact-attachments")
             .upload(filePath, file, { upsert: false });
