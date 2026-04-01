@@ -130,11 +130,11 @@ export default function Contact() {
           <div>
             {submitted ? (
               <div className="bg-[var(--sl-navy)] rounded-2xl p-10 text-center">
-                <svg className="w-16 h-16 text-[var(--sl-lime)] mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <svg className="w-16 h-16 text-[var(--sl-lime)] mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                 </svg>
                 <h3 className="text-2xl font-bold text-[var(--sl-ice)] mb-3">Your Britches Are About to Get Bigger.</h3>
-                <p className="text-[var(--sl-ice)]/60 mb-8">Place your deposit to get things moving.</p>
+                <p className="text-[var(--sl-ice)]/60 mb-8">Place your deposit to get things started.</p>
                 <button
                   className="w-full px-6 py-4 bg-[var(--sl-lime)] text-[var(--sl-navy)] rounded-full font-bold text-lg hover:brightness-110 hover:scale-[1.03] hover:shadow-lg hover:shadow-[var(--sl-lime)]/20 active:scale-[0.98] transition-all duration-200 mb-4"
                   onClick={() => {/* Stripe checkout will go here */}}
