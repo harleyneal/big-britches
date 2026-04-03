@@ -44,7 +44,7 @@ export default function PricingPage() {
 
             <ul className="space-y-3 mb-10">
               {[
-                "Custom-designed, mobile-responsive website (up to 10 pages)",
+                "Custom-designed, mobile-responsive website (up to 5 pages)",
                 "Admin dashboard with analytics & business overview",
                 "Online scheduling & booking with automated reminders",
                 "Stripe payment processing & invoicing",
