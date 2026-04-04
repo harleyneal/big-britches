@@ -60,9 +60,8 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
 
   const isSuperAdmin = user.profile.role === "super_admin";
 
-  // Build nav items — Harley requested: Dashboard (far right), Clients, Logs, Tenants
+  // Build nav items — main navigation (no Settings or Dashboard here)
   const navItems = [
-    { label: "Dashboard", href: "/admin/content", icon: LayoutDashboard },
     { label: "Clients", href: "/admin/content/clients", icon: Users },
     { label: "Social", href: "/admin/social", icon: Share2 },
     { label: "Logs", href: "/admin/content/logs", icon: ScrollText },
@@ -71,8 +70,6 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   if (isSuperAdmin) {
     navItems.push({ label: "Tenants", href: "/admin/tenants", icon: Building2 });
   }
-
-  navItems.push({ label: "Settings", href: "/admin/settings", icon: Settings });
 
   // White-label: show tenant logo if client user has one, otherwise Big Britches
   const tenantLogo = !isSuperAdmin && user.tenant?.logo_url;
@@ -127,6 +124,19 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
           {/* Divider */}
           <div className="w-px h-8 bg-white/20 mx-2" />
 
+          {/* Dashboard icon — just left of user menu */}
+          <Link
+            href="/admin/content"
+            className={`flex items-center gap-1.5 p-2 rounded-lg transition-colors ${
+              pathname === "/admin/content"
+                ? "bg-[var(--sl-blue)] text-white"
+                : "text-white/70 hover:text-white hover:bg-white/10"
+            }`}
+            title="Dashboard"
+          >
+            <LayoutDashboard size={18} />
+          </Link>
+
           {/* User menu */}
           <div className="relative" ref={menuRef}>
             <button
@@ -153,6 +163,14 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                     {user.profile.role.replace("_", " ")}
                   </span>
                 </div>
+                <Link
+                  href="/admin/settings"
+                  onClick={() => setUserMenuOpen(false)}
+                  className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-[var(--sl-navy)] hover:bg-[var(--sl-ice)] transition-colors"
+                >
+                  <Settings size={16} />
+                  Settings
+                </Link>
                 <button
                   onClick={() => {
                     setUserMenuOpen(false);
