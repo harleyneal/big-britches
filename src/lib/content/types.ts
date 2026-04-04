@@ -15,6 +15,7 @@ export interface ContentClient {
   };
   auto_approve: boolean;
   notification_email: string;
+  payment_config?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
