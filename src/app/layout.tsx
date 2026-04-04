@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ParticleBackground from "@/components/ParticleBackground";
-import ChatWidget from "@/components/ChatWidget";
-import TradingGridOverlay from "@/components/TradingGridOverlay";
+import PublicShell from "@/components/PublicShell";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -36,13 +32,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={plusJakartaSans.variable}>
       <body className="antialiased bg-[var(--sl-ice)] text-[var(--sl-navy)]">
-        <TradingGridOverlay />
-        <ParticleBackground />
-
-        <Navbar />
-        <main className="relative">{children}</main>
-        <Footer />
-        <ChatWidget />
+        <PublicShell>{children}</PublicShell>
       </body>
     </html>
   );
