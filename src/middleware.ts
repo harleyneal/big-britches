@@ -15,6 +15,6 @@ export const config = {
      * - public folder assets
      * - API routes that need to be publicly accessible
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$|api/chat|api/contact|api/content/generate).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$|api/chat|api/contact|api/content/generate|api/cron).*)",
   ],
 };
