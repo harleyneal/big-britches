@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronDown,
   Share2,
+  CreditCard,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { AuthProvider, useAuth } from "@/lib/auth/context";
@@ -64,6 +65,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const navItems = [
     { label: "Clients", href: "/admin/content/clients", icon: Users },
     { label: "Social", href: "/admin/social", icon: Share2 },
+    { label: "Payments", href: "/admin/payments", icon: CreditCard },
     { label: "Logs", href: "/admin/content/logs", icon: ScrollText },
   ];
 
