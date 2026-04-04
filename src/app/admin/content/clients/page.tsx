@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Save, X } from "lucide-react";
+import Link from "next/link";
+import { Plus, Edit2, Save, X, Settings2 } from "lucide-react";
 import type { ContentClient } from "@/lib/content/types";
 
 type EditingClient = ContentClient | null;
@@ -197,12 +198,22 @@ export default function ClientsPage() {
                       {client.industry}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleEditClick(client)}
-                    className="p-2 hover:bg-[var(--sl-blue-10)] rounded-lg transition-colors"
-                  >
-                    <Edit2 size={18} className="text-[var(--sl-blue)]" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <Link
+                      href={`/admin/content/clients/${client.id}`}
+                      className="p-2 hover:bg-[var(--sl-blue-10)] rounded-lg transition-colors"
+                      title="Configure payments & products"
+                    >
+                      <Settings2 size={18} className="text-[var(--sl-blue)]" />
+                    </Link>
+                    <button
+                      onClick={() => handleEditClick(client)}
+                      className="p-2 hover:bg-[var(--sl-blue-10)] rounded-lg transition-colors"
+                      title="Edit client info"
+                    >
+                      <Edit2 size={18} className="text-[var(--sl-blue)]" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-2 text-sm">
