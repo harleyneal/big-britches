@@ -394,13 +394,16 @@ export default function TenantConfigPage() {
                     <option value="number">Number</option>
                     <option value="currency">Currency</option>
                   </select>
-                  <input
-                    type="text"
-                    placeholder="Width (e.g., 1fr)"
+                  <select
                     value={column.width}
                     onChange={(e) => updateInvoiceColumn(column.id, "width", e.target.value)}
-                    className="w-20 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
-                  />
+                    className="px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
+                  >
+                    <option value="2fr">Wide</option>
+                    <option value="1.5fr">Medium</option>
+                    <option value="1fr">Normal</option>
+                    <option value="0.5fr">Narrow</option>
+                  </select>
                   <button
                     onClick={() => deleteInvoiceColumn(column.id)}
                     className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-20 transition-colors"
@@ -461,10 +464,12 @@ export default function TenantConfigPage() {
                 <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Formula Preview</label>
                 <div className="px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] bg-[var(--sl-ice)] text-xs text-[var(--sl-navy)] font-mono">
                   {invoiceTemplate.amountFormula.type === "manual"
-                    ? "Manual entry"
-                    : invoiceTemplate.amountFormula.type === "multiply"
-                    ? `${invoiceTemplate.amountFormula.columnIds.join(" × ")}`
-                    : `${invoiceTemplate.amountFormula.columnIds.join(" + ")}`}
+                    ? "Amount = Manual entry"
+                    : invoiceTemplate.amountFormula.columnIds.length === 0
+                    ? "Select columns above"
+                    : `Amount = ${invoiceTemplate.amountFormula.columnIds
+                        .map((cid) => invoiceTemplate.columns.find((c) => c.id === cid)?.name || "?")
+                        .join(invoiceTemplate.amountFormula.type === "multiply" ? " × " : " + ")}`}
                 </div>
               </div>
             </div>
@@ -526,6 +531,119 @@ export default function TenantConfigPage() {
               </div>
             </div>
           </div>
+
+          {/* Invoice Preview Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Invoice Preview</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Live preview of your invoice template</p>
+            </div>
+            <div className="mt-4 bg-[var(--sl-ice)] rounded-lg p-5">
+              {/* Invoice header */}
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-lg font-bold text-[var(--sl-navy)]">{tenant?.name || "Company Name"}</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">123 Business Ave, Suite 100</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-[var(--sl-navy)]">INVOICE</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">#INV-001</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">{new Date().toLocaleDateString()}</p>
+                </div>
+              </div>
+              {/* Client info row */}
+              <div className="mb-4 pb-4 border-b border-[var(--sl-blue-10)]">
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Bill To</p>
+                <p className="text-sm text-[var(--sl-navy)]">Sample Client</p>
+                <p className="text-xs text-[var(--sl-navy)] opacity-40">client@example.com</p>
+              </div>
+              {/* Column headers */}
+              {invoiceTemplate.columns.length > 0 ? (
+                <div className="rounded-lg overflow-hidden border border-[var(--sl-blue-10)]">
+                  <div
+                    className="grid bg-[var(--sl-blue)] text-white"
+                    style={{
+                      gridTemplateColumns: [
+                        ...invoiceTemplate.columns.map((c) => c.width || "1fr"),
+                        "0.7fr",
+                      ].join(" "),
+                    }}
+                  >
+                    {invoiceTemplate.columns.map((col) => (
+                      <div key={col.id} className="px-3 py-2 text-xs font-semibold">
+                        {col.name || "Column"}
+                      </div>
+                    ))}
+                    <div className="px-3 py-2 text-xs font-semibold text-right">Amount</div>
+                  </div>
+                  {/* Sample rows */}
+                  {[1, 2].map((row) => (
+                    <div
+                      key={row}
+                      className="grid bg-white border-t border-[var(--sl-blue-10)]"
+                      style={{
+                        gridTemplateColumns: [
+                          ...invoiceTemplate.columns.map((c) => c.width || "1fr"),
+                          "0.7fr",
+                        ].join(" "),
+                      }}
+                    >
+                      {invoiceTemplate.columns.map((col) => (
+                        <div key={col.id} className="px-3 py-2.5 text-xs text-[var(--sl-navy)] opacity-40">
+                          {col.type === "currency"
+                            ? `$${(row * 50).toFixed(2)}`
+                            : col.type === "number"
+                            ? `${row}`
+                            : `Sample ${col.name || "text"}`}
+                        </div>
+                      ))}
+                      <div className="px-3 py-2.5 text-xs text-[var(--sl-navy)] font-medium text-right">
+                        ${(row * 100).toFixed(2)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">Add columns above to see the invoice preview</p>
+                </div>
+              )}
+              {/* Invoice footer */}
+              {invoiceTemplate.columns.length > 0 && (
+                <div className="mt-4 flex justify-end">
+                  <div className="w-48 space-y-1.5">
+                    <div className="flex justify-between text-xs text-[var(--sl-navy)]">
+                      <span className="opacity-50">Subtotal</span>
+                      <span>$300.00</span>
+                    </div>
+                    {invoiceTemplate.defaultTaxRate > 0 && (
+                      <div className="flex justify-between text-xs text-[var(--sl-navy)]">
+                        <span className="opacity-50">Tax ({invoiceTemplate.defaultTaxRate}%)</span>
+                        <span>${(300 * invoiceTemplate.defaultTaxRate / 100).toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-sm font-semibold text-[var(--sl-navy)] pt-1.5 border-t border-[var(--sl-blue-10)]">
+                      <span>Total</span>
+                      <span>${(300 + 300 * invoiceTemplate.defaultTaxRate / 100).toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {/* Terms */}
+              {invoiceTemplate.defaultTerms && (
+                <div className="mt-4 pt-3 border-t border-[var(--sl-blue-10)]">
+                  <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Terms</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">{invoiceTemplate.defaultTerms}</p>
+                </div>
+              )}
+              {invoiceTemplate.defaultNotes && (
+                <div className="mt-2">
+                  <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Notes</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">{invoiceTemplate.defaultNotes}</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -574,20 +692,26 @@ export default function TenantConfigPage() {
                       <option value="boolean">Boolean</option>
                       <option value="image">Image</option>
                     </select>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center rounded-lg overflow-hidden border border-[var(--sl-blue-10)]">
                       <button
-                        onClick={() => updateProductField(field.id, "required", !field.required)}
-                        className={`w-10 h-6 rounded-full transition-all flex items-center ${
+                        onClick={() => updateProductField(field.id, "required", true)}
+                        className={`px-2.5 py-1.5 text-xs font-semibold transition-colors ${
                           field.required
-                            ? "bg-[var(--sl-blue)]"
-                            : "bg-gray-200"
+                            ? "bg-[var(--sl-blue)] text-white"
+                            : "bg-white text-[var(--sl-navy)] opacity-40 hover:opacity-70"
                         }`}
                       >
-                        <div
-                          className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                            field.required ? "translate-x-4" : "translate-x-0.5"
-                          }`}
-                        />
+                        REQ
+                      </button>
+                      <button
+                        onClick={() => updateProductField(field.id, "required", false)}
+                        className={`px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                          !field.required
+                            ? "bg-[var(--sl-blue)] text-white"
+                            : "bg-white text-[var(--sl-navy)] opacity-40 hover:opacity-70"
+                        }`}
+                      >
+                        OPT
                       </button>
                     </div>
                     <button
@@ -693,44 +817,128 @@ export default function TenantConfigPage() {
           {/* Form Preview Card */}
           <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
             <div>
-              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Form Preview</h2>
-              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">This is what your clients will see</p>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Shopping Cart Preview</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">This is what your clients&apos; customers will see</p>
             </div>
-            <div className="mt-4 p-4 bg-[var(--sl-ice)] rounded-lg space-y-3">
-              {productSchema.fields.map((field) => (
-                <div key={field.id}>
-                  <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">
-                    {field.name || "Unnamed Field"}
-                    {field.required && <span className="text-red-500 ml-1">*</span>}
-                  </label>
-                  {field.type === "select" ? (
-                    <select
-                      disabled
-                      className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50"
-                    >
-                      <option>{field.placeholder || "Select option"}</option>
-                    </select>
-                  ) : field.type === "textarea" ? (
-                    <textarea
-                      disabled
-                      placeholder={field.placeholder}
-                      className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 resize-none"
-                      rows={3}
-                    />
-                  ) : field.type === "boolean" ? (
-                    <input type="checkbox" disabled className="w-4 h-4 opacity-50" />
-                  ) : (
-                    <input
-                      type={field.type === "number" ? "number" : field.type === "currency" ? "text" : "text"}
-                      disabled
-                      placeholder={field.placeholder}
-                      className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50"
-                    />
+            <div className="mt-4 bg-[var(--sl-ice)] rounded-lg p-5">
+              {productSchema.fields.length > 0 ? (
+                <div className="space-y-4">
+                  {/* Image fields rendered as placeholders */}
+                  {productSchema.fields.filter((f) => f.type === "image").length > 0 && (
+                    <div>
+                      <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-2">
+                        {productSchema.fields.find((f) => f.type === "image")?.name || "Product Images"}
+                        {productSchema.fields.find((f) => f.type === "image")?.required && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
+                      </label>
+                      <div className="flex gap-3">
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className="w-24 h-24 rounded-lg border-2 border-dashed border-[var(--sl-blue-10)] bg-white flex flex-col items-center justify-center gap-1"
+                          >
+                            <Package className="w-6 h-6 text-[var(--sl-navy)] opacity-20" />
+                            <span className="text-[10px] text-[var(--sl-navy)] opacity-30">
+                              {i === 1 ? "Main" : `Photo ${i}`}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Non-image fields */}
+                  {productSchema.fields
+                    .filter((f) => f.type !== "image")
+                    .map((field) => (
+                      <div key={field.id}>
+                        <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">
+                          {field.name || "Unnamed Field"}
+                          {field.required && <span className="text-red-500 ml-1">*</span>}
+                        </label>
+                        {field.type === "currency" ? (
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--sl-navy)] opacity-40">$</span>
+                            <input
+                              disabled
+                              placeholder="0.00"
+                              className="w-full pl-7 pr-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 bg-white"
+                            />
+                          </div>
+                        ) : field.type === "boolean" ? (
+                          <div className="flex items-center gap-3">
+                            <button
+                              disabled
+                              className="w-10 h-6 rounded-full bg-gray-200 flex items-center"
+                            >
+                              <div className="w-5 h-5 rounded-full bg-white translate-x-0.5" />
+                            </button>
+                            <span className="text-xs text-[var(--sl-navy)] opacity-40">Off</span>
+                          </div>
+                        ) : field.type === "select" ? (
+                          <div className="relative">
+                            <select
+                              disabled
+                              className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 bg-white appearance-none"
+                            >
+                              <option>
+                                {field.options && field.options.length > 0
+                                  ? field.options[0]
+                                  : field.placeholder || "Select option"}
+                              </option>
+                            </select>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                              <svg className="w-4 h-4 text-[var(--sl-navy)] opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </div>
+                          </div>
+                        ) : field.type === "textarea" ? (
+                          <textarea
+                            disabled
+                            placeholder={field.placeholder || "Enter text..."}
+                            className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 resize-none bg-white"
+                            rows={3}
+                          />
+                        ) : field.type === "number" ? (
+                          <input
+                            type="number"
+                            disabled
+                            placeholder={field.placeholder || "0"}
+                            className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 bg-white"
+                          />
+                        ) : (
+                          <input
+                            disabled
+                            placeholder={field.placeholder || "Enter text..."}
+                            className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 bg-white"
+                          />
+                        )}
+                      </div>
+                    ))}
+
+                  {/* Inventory field when enabled */}
+                  {productSchema.enableInventory && (
+                    <div className="pt-3 border-t border-[var(--sl-blue-10)]">
+                      <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">
+                        Stock Quantity
+                      </label>
+                      <input
+                        type="number"
+                        disabled
+                        placeholder="0"
+                        className="w-32 px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 bg-white"
+                      />
+                      <p className="text-[10px] text-[var(--sl-navy)] opacity-30 mt-1">Inventory tracking enabled</p>
+                    </div>
                   )}
                 </div>
-              ))}
-              {productSchema.fields.length === 0 && (
-                <p className="text-xs text-[var(--sl-navy)] opacity-40">No fields configured</p>
+              ) : (
+                <div className="text-center py-8">
+                  <Package className="w-8 h-8 text-[var(--sl-navy)] opacity-15 mx-auto mb-2" />
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">Add product fields above to see the form preview</p>
+                </div>
               )}
             </div>
           </div>
