@@ -5,12 +5,10 @@ export interface ContentClient {
   target_audience: string;
   brand_tone: string;
   website_url: string;
-  cms_type: "wordpress" | "nextjs_mdx" | "custom_api";
-  cms_api_url: string;
-  cms_api_key: string;
   platforms_enabled: {
-    linkedin: boolean;
-    medium: boolean;
+    blog: boolean;
+    facebook: boolean;
+    instagram: boolean;
     google_business: boolean;
   };
   auto_approve: boolean;
@@ -47,7 +45,7 @@ export interface ContentPost {
 export interface ContentDistribution {
   id: string;
   post_id: string;
-  platform: "linkedin" | "medium" | "google_business" | "website";
+  platform: "blog" | "facebook" | "instagram" | "google_business";
   status: "pending" | "published" | "failed";
   external_url?: string;
   error_message?: string;

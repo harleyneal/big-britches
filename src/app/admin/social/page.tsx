@@ -21,6 +21,7 @@ import {
   Zap,
   Eye,
   AlertCircle,
+  FileText,
 } from "lucide-react";
 
 type Tab = "compose" | "queue" | "integrations" | "automation";
@@ -71,6 +72,7 @@ const PLATFORM_META: Record<
   string,
   { label: string; icon: typeof MessageCircle; color: string; bg: string }
 > = {
+  blog: { label: "Blog", icon: FileText, color: "text-[var(--sl-blue)]", bg: "bg-[var(--sl-blue-10)]" },
   facebook: { label: "Facebook", icon: MessageCircle, color: "text-blue-600", bg: "bg-blue-50" },
   instagram: { label: "Instagram", icon: Camera, color: "text-pink-600", bg: "bg-pink-50" },
   google_business: {
@@ -95,7 +97,9 @@ export default function SocialMediaPage() {
 
   // Compose
   const [composeContent, setComposeContent] = useState("");
+  const [composeBlogTitle, setComposeBlogTitle] = useState("");
   const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
+  const [postToBlog, setPostToBlog] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishResult, setPublishResult] = useState<string | null>(null);
 
@@ -187,45 +191,86 @@ export default function SocialMediaPage() {
 
   // ─── Manual publish ────────────────────────────────────────────
   async function handlePublish() {
-    if (!composeContent.trim() || selectedAccountIds.length === 0) return;
+    const hasTargets = selectedAccountIds.length > 0 || postToBlog;
+    if (!composeContent.trim() || !hasTargets) return;
     setPublishing(true);
     setPublishResult(null);
 
-    // Create the post
-    const createRes = await fetch("/api/social/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: composeContent,
-        target_account_ids: selectedAccountIds,
-        post_type: "manual",
-      }),
-    });
-    const createData = await createRes.json();
-    if (!createData.post) {
-      setPublishResult(`Error: ${createData.error}`);
-      setPublishing(false);
-      return;
+    const results: string[] = [];
+    let allSucceeded = true;
+
+    // Publish to blog if selected
+    if (postToBlog) {
+      try {
+        const blogTitle = composeBlogTitle.trim() || composeContent.slice(0, 60).trim();
+        const blogRes = await fetch("/api/blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: blogTitle,
+            body_html: `<div>${composeContent.replace(/\n/g, "<br/>")}</div>`,
+            body_markdown: composeContent,
+            excerpt: composeContent.slice(0, 160),
+            status: "published",
+          }),
+        });
+        const blogData = await blogRes.json();
+        if (blogData.post) {
+          results.push("Blog");
+        } else {
+          allSucceeded = false;
+          results.push(`Blog failed: ${blogData.error}`);
+        }
+      } catch {
+        allSucceeded = false;
+        results.push("Blog failed: network error");
+      }
     }
 
-    // Publish it
-    const pubRes = await fetch("/api/social/publish", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ post_id: createData.post.id }),
-    });
-    const pubData = await pubRes.json();
+    // Publish to social accounts if any selected
+    if (selectedAccountIds.length > 0) {
+      const createRes = await fetch("/api/social/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: composeContent,
+          target_account_ids: selectedAccountIds,
+          post_type: "manual",
+        }),
+      });
+      const createData = await createRes.json();
+      if (!createData.post) {
+        allSucceeded = false;
+        results.push(`Social error: ${createData.error}`);
+      } else {
+        const pubRes = await fetch("/api/social/publish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ post_id: createData.post.id }),
+        });
+        const pubData = await pubRes.json();
 
-    if (pubData.allSucceeded) {
-      setPublishResult("Posted successfully to all platforms!");
+        if (pubData.allSucceeded) {
+          results.push("Social media");
+        } else {
+          allSucceeded = false;
+          const failures = pubData.results
+            ?.filter((r: { success: boolean }) => !r.success)
+            .map((r: { platform: string; error: string }) => `${r.platform}: ${r.error}`)
+            .join("; ");
+          results.push(`Social partial: ${failures}`);
+        }
+      }
+    }
+
+    if (allSucceeded) {
+      setPublishResult(`Posted successfully to: ${results.join(", ")}!`);
       setComposeContent("");
+      setComposeBlogTitle("");
       setSelectedAccountIds([]);
+      setPostToBlog(false);
     } else {
-      const failures = pubData.results
-        ?.filter((r: { success: boolean }) => !r.success)
-        .map((r: { platform: string; error: string }) => `${r.platform}: ${r.error}`)
-        .join("; ");
-      setPublishResult(`Some posts failed: ${failures}`);
+      setPublishResult(`Results: ${results.join("; ")}`);
     }
     setPublishing(false);
     fetchPosts();
@@ -496,55 +541,80 @@ export default function SocialMediaPage() {
               <p className="text-sm font-medium text-[var(--sl-navy)] mb-2">
                 Post to:
               </p>
-              {accounts.length === 0 ? (
-                <p className="text-sm text-gray-400">
-                  No accounts connected.{" "}
-                  <button
-                    onClick={() => setActiveTab("integrations")}
-                    className="text-[var(--sl-blue)] hover:underline"
-                  >
-                    Connect one now
-                  </button>
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {accounts
-                    .filter((a) => a.is_active)
-                    .map((account) => {
-                      const meta = PLATFORM_META[account.platform];
-                      const Icon = meta?.icon ?? Link2;
-                      const selected = selectedAccountIds.includes(account.id);
-                      return (
-                        <button
-                          key={account.id}
-                          onClick={() => toggleAccountSelection(account.id)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
-                            selected
-                              ? "border-[var(--sl-blue)] bg-[var(--sl-blue-10)] text-[var(--sl-blue)]"
-                              : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
-                          }`}
-                        >
-                          <Icon size={16} />
-                          {account.platform_page_name}
-                          {selected && <CheckCircle size={14} />}
-                        </button>
-                      );
-                    })}
+              <div className="flex flex-wrap gap-2">
+                {/* Blog toggle — always available */}
+                <button
+                  onClick={() => setPostToBlog(!postToBlog)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                    postToBlog
+                      ? "border-[var(--sl-blue)] bg-[var(--sl-blue-10)] text-[var(--sl-blue)]"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
+                  }`}
+                >
+                  <FileText size={16} />
+                  Blog
+                  {postToBlog && <CheckCircle size={14} />}
+                </button>
+
+                {/* Social accounts */}
+                {accounts
+                  .filter((a) => a.is_active)
+                  .map((account) => {
+                    const meta = PLATFORM_META[account.platform];
+                    const Icon = meta?.icon ?? Link2;
+                    const selected = selectedAccountIds.includes(account.id);
+                    return (
+                      <button
+                        key={account.id}
+                        onClick={() => toggleAccountSelection(account.id)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                          selected
+                            ? "border-[var(--sl-blue)] bg-[var(--sl-blue-10)] text-[var(--sl-blue)]"
+                            : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
+                        }`}
+                      >
+                        <Icon size={16} />
+                        {account.platform_page_name}
+                        {selected && <CheckCircle size={14} />}
+                      </button>
+                    );
+                  })}
+
+                {accounts.filter((a) => a.is_active).length > 0 && (
                   <button
                     onClick={() => {
                       const allIds = accounts
                         .filter((a) => a.is_active)
                         .map((a) => a.id);
-                      setSelectedAccountIds(
-                        selectedAccountIds.length === allIds.length ? [] : allIds
-                      );
+                      const allSocialSelected = selectedAccountIds.length === allIds.length;
+                      const allSelected = allSocialSelected && postToBlog;
+                      if (allSelected) {
+                        setSelectedAccountIds([]);
+                        setPostToBlog(false);
+                      } else {
+                        setSelectedAccountIds(allIds);
+                        setPostToBlog(true);
+                      }
                     }}
                     className="px-3 py-2 rounded-lg border border-dashed border-gray-300 text-sm text-gray-400 hover:border-gray-400 hover:text-gray-500 transition-colors"
                   >
-                    {selectedAccountIds.length === accounts.filter((a) => a.is_active).length
+                    {selectedAccountIds.length === accounts.filter((a) => a.is_active).length && postToBlog
                       ? "Deselect All"
                       : "Select All"}
                   </button>
+                )}
+              </div>
+
+              {/* Blog title field — shown when Blog is selected */}
+              {postToBlog && (
+                <div className="mt-3">
+                  <input
+                    type="text"
+                    value={composeBlogTitle}
+                    onChange={(e) => setComposeBlogTitle(e.target.value)}
+                    placeholder="Blog post title (optional — will use first line if blank)"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-[var(--sl-ice)] text-[var(--sl-navy)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-blue)] text-sm"
+                  />
                 </div>
               )}
             </div>
@@ -556,7 +626,7 @@ export default function SocialMediaPage() {
                 disabled={
                   publishing ||
                   !composeContent.trim() ||
-                  selectedAccountIds.length === 0
+                  (selectedAccountIds.length === 0 && !postToBlog)
                 }
                 className="flex items-center gap-2 px-5 py-2.5 bg-[var(--sl-blue)] text-white rounded-lg font-medium hover:bg-[var(--sl-navy)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -712,6 +782,27 @@ export default function SocialMediaPage() {
       {/* ═══ INTEGRATIONS TAB ═══ */}
       {activeTab === "integrations" && (
         <div className="space-y-4">
+          {/* Blog card — always connected */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[var(--sl-blue-10)] flex items-center justify-center">
+                  <FileText size={20} className="text-[var(--sl-blue)]" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-[var(--sl-navy)]">Blog</h3>
+                  <p className="text-xs text-gray-400">
+                    Publish posts to your website&apos;s blog — always available, no setup needed
+                  </p>
+                </div>
+              </div>
+              <span className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-sm font-medium">
+                <CheckCircle size={14} />
+                Connected
+              </span>
+            </div>
+          </div>
+
           {/* Platform cards */}
           {(["facebook", "instagram", "google_business"] as const).map(
             (platform) => {

@@ -8,7 +8,6 @@ import type { ContentClient } from "@/lib/content/types";
 type EditingClient = ContentClient | null;
 
 const BRAND_TONES = ["professional", "friendly", "technical", "casual", "authoritative"];
-const CMS_TYPES = ["wordpress", "nextjs_mdx", "custom_api"];
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<ContentClient[]>([]);
@@ -23,12 +22,10 @@ export default function ClientsPage() {
     target_audience: "",
     brand_tone: "professional",
     website_url: "",
-    cms_type: "wordpress" as const,
-    cms_api_url: "",
-    cms_api_key: "",
     platforms_enabled: {
-      linkedin: true,
-      medium: true,
+      blog: true,
+      facebook: true,
+      instagram: true,
       google_business: true,
     },
     auto_approve: false,
@@ -107,8 +104,9 @@ export default function ClientsPage() {
     setEditingData({
       ...editingData,
       platforms_enabled: {
-        linkedin: editingData.platforms_enabled?.linkedin ?? true,
-        medium: editingData.platforms_enabled?.medium ?? true,
+        blog: editingData.platforms_enabled?.blog ?? true,
+        facebook: editingData.platforms_enabled?.facebook ?? true,
+        instagram: editingData.platforms_enabled?.instagram ?? true,
         google_business: editingData.platforms_enabled?.google_business ?? true,
         [platform]: value,
       },
@@ -233,10 +231,6 @@ export default function ClientsPage() {
                     <p className="text-[var(--sl-navy)]">{client.brand_tone}</p>
                   </div>
 
-                  <div>
-                    <p className="text-[var(--sl-navy)] opacity-60">CMS Type</p>
-                    <p className="text-[var(--sl-navy)]">{client.cms_type}</p>
-                  </div>
                 </div>
 
                 <div className="pt-4 border-t border-[var(--sl-blue-10)]">
@@ -244,17 +238,22 @@ export default function ClientsPage() {
                     Platforms Enabled
                   </p>
                   <div className="flex gap-2 flex-wrap">
-                    {client.platforms_enabled.linkedin && (
+                    {client.platforms_enabled?.blog && (
                       <span className="px-2 py-1 bg-[var(--sl-blue-10)] text-[var(--sl-blue)] rounded text-xs font-medium">
-                        LinkedIn
+                        Blog
                       </span>
                     )}
-                    {client.platforms_enabled.medium && (
+                    {client.platforms_enabled?.facebook && (
                       <span className="px-2 py-1 bg-[var(--sl-blue-10)] text-[var(--sl-blue)] rounded text-xs font-medium">
-                        Medium
+                        Facebook
                       </span>
                     )}
-                    {client.platforms_enabled.google_business && (
+                    {client.platforms_enabled?.instagram && (
+                      <span className="px-2 py-1 bg-[var(--sl-blue-10)] text-[var(--sl-blue)] rounded text-xs font-medium">
+                        Instagram
+                      </span>
+                    )}
+                    {client.platforms_enabled?.google_business && (
                       <span className="px-2 py-1 bg-[var(--sl-blue-10)] text-[var(--sl-blue)] rounded text-xs font-medium">
                         Google Business
                       </span>
@@ -385,70 +384,19 @@ function ClientForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">
-            CMS Type
-          </label>
-          <select
-            value={data.cms_type || "wordpress"}
-            onChange={(e) => onChange({ ...data, cms_type: e.target.value as "wordpress" | "nextjs_mdx" | "custom_api" })}
-            className="w-full px-3 py-2 border border-[var(--sl-blue-10)] rounded-lg text-sm"
-          >
-            {CMS_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type.replace(/_/g, " ").toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">
-            Notification Email *
-          </label>
-          <input
-            type="email"
-            value={data.notification_email || ""}
-            onChange={(e) =>
-              onChange({ ...data, notification_email: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-[var(--sl-blue-10)] rounded-lg text-sm"
-            placeholder="email@example.com"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">
-            CMS API URL
-          </label>
-          <input
-            type="url"
-            value={data.cms_api_url || ""}
-            onChange={(e) =>
-              onChange({ ...data, cms_api_url: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-[var(--sl-blue-10)] rounded-lg text-sm"
-            placeholder="https://..."
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">
-            CMS API Key
-          </label>
-          <input
-            type="password"
-            value={data.cms_api_key || ""}
-            onChange={(e) =>
-              onChange({ ...data, cms_api_key: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-[var(--sl-blue-10)] rounded-lg text-sm"
-            placeholder="••••••••"
-          />
-        </div>
+      <div>
+        <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">
+          Notification Email *
+        </label>
+        <input
+          type="email"
+          value={data.notification_email || ""}
+          onChange={(e) =>
+            onChange({ ...data, notification_email: e.target.value })
+          }
+          className="w-full px-3 py-2 border border-[var(--sl-blue-10)] rounded-lg text-sm"
+          placeholder="email@example.com"
+        />
       </div>
 
       <div>
@@ -459,24 +407,35 @@ function ClientForm({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
-              checked={data.platforms_enabled?.linkedin || false}
+              checked={data.platforms_enabled?.blog || false}
               onChange={(e) =>
-                onPlatformChange("linkedin", e.target.checked)
+                onPlatformChange("blog", e.target.checked)
               }
               className="w-4 h-4"
             />
-            <span className="text-sm text-[var(--sl-navy)]">LinkedIn</span>
+            <span className="text-sm text-[var(--sl-navy)]">Blog</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
-              checked={data.platforms_enabled?.medium || false}
+              checked={data.platforms_enabled?.facebook || false}
               onChange={(e) =>
-                onPlatformChange("medium", e.target.checked)
+                onPlatformChange("facebook", e.target.checked)
               }
               className="w-4 h-4"
             />
-            <span className="text-sm text-[var(--sl-navy)]">Medium</span>
+            <span className="text-sm text-[var(--sl-navy)]">Facebook</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={data.platforms_enabled?.instagram || false}
+              onChange={(e) =>
+                onPlatformChange("instagram", e.target.checked)
+              }
+              className="w-4 h-4"
+            />
+            <span className="text-sm text-[var(--sl-navy)]">Instagram</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
