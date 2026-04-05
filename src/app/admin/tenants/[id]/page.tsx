@@ -80,7 +80,6 @@ export default function TenantConfigPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [tenant, setTenant] = useState<TenantData | null>(null);
 
-  // Invoice Template state
   const [invoiceTemplate, setInvoiceTemplate] = useState<InvoiceTemplate>({
     columns: [],
     amountFormula: { type: "manual", columnIds: [] },
@@ -89,67 +88,46 @@ export default function TenantConfigPage() {
     defaultTaxRate: 0,
   });
 
-  // Product Schema state
   const [productSchema, setProductSchema] = useState<ProductSchema>({
     fields: [],
     enableInventory: false,
     enableVariants: false,
   });
 
-  // Content & Social state
   const [contentData, setContentData] = useState({
     industry: "",
     target_audience: "",
-    brand_tone: "",
     website_url: "",
+    brand_tone: "",
     notification_email: "",
     auto_approve: false,
-    platforms_enabled: {
-      blog: false,
-      facebook: false,
-      instagram: false,
-      google_business: false,
-    },
+    platforms_enabled: {} as Record<string, boolean>,
   });
 
-  // Fetch tenant data
   useEffect(() => {
     const fetchTenant = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/tenants/${tenantId}`);
-        if (!response.ok) throw new Error("Failed to fetch tenant");
-
-        const data = await response.json();
+        const res = await fetch(`/api/tenants/${tenantId}`);
+        if (!res.ok) throw new Error("Failed to fetch tenant");
+        const data: TenantData = await res.json();
         setTenant(data);
 
-        // Initialize invoice template
         if (data.payment_config?.invoice_template) {
           setInvoiceTemplate(data.payment_config.invoice_template);
         }
-
-        // Initialize product schema
         if (data.payment_config?.product_schema) {
           setProductSchema(data.payment_config.product_schema);
         }
-
-        // Initialize content data
         setContentData({
           industry: data.industry || "",
           target_audience: data.target_audience || "",
-          brand_tone: data.brand_tone || "",
           website_url: data.website_url || "",
+          brand_tone: data.brand_tone || "",
           notification_email: data.notification_email || "",
           auto_approve: data.auto_approve || false,
-          platforms_enabled: data.platforms_enabled || {
-            blog: false,
-            facebook: false,
-            instagram: false,
-            google_business: false,
-          },
+          platforms_enabled: data.platforms_enabled || {},
         });
-
-        setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load tenant");
       } finally {
@@ -160,249 +138,257 @@ export default function TenantConfigPage() {
     if (tenantId) fetchTenant();
   }, [tenantId]);
 
-  // Save configuration
-  const saveConfig = useCallback(async () => {
-    if (!tenant) return;
-
+  const handleSave = useCallback(async () => {
     try {
       setSaving(true);
       setError(null);
 
-      let payload: Record<string, any> = {};
+      let payload: Record<string, unknown> = {
+        industry: contentData.industry,
+        target_audience: contentData.target_audience,
+        website_url: contentData.website_url,
+        brand_tone: contentData.brand_tone,
+        notification_email: contentData.notification_email,
+        auto_approve: contentData.auto_approve,
+        platforms_enabled: contentData.platforms_enabled,
+      };
 
       if (activeTab === "invoicing" || activeTab === "ecommerce") {
         payload.payment_config = {
-          invoice_template: activeTab === "invoicing" ? invoiceTemplate : undefined,
-          product_schema: activeTab === "ecommerce" ? productSchema : undefined,
+          invoice_template: invoiceTemplate,
+          product_schema: productSchema,
         };
-      } else if (activeTab === "content") {
-        payload = contentData;
       }
 
-      const response = await fetch(`/api/tenants/${tenantId}`, {
+      const res = await fetch(`/api/tenants/${tenantId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Failed to save configuration");
-
-      const updated = await response.json();
-      setTenant(updated);
-      setSuccess("Configuration saved successfully");
-
-      setTimeout(() => setSuccess(null), 3000);
+      if (!res.ok) throw new Error("Failed to save tenant");
+      setSuccess("Saved!");
+      setTimeout(() => setSuccess(null), 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save configuration");
+      setError(err instanceof Error ? err.message : "Failed to save");
     } finally {
       setSaving(false);
     }
-  }, [tenant, activeTab, invoiceTemplate, productSchema, contentData, tenantId]);
+  }, [tenantId, activeTab, invoiceTemplate, productSchema, contentData]);
+
+  const addInvoiceColumn = () => {
+    const newId = `col-${Date.now()}`;
+    setInvoiceTemplate((prev) => ({
+      ...prev,
+      columns: [...prev.columns, { id: newId, name: "", type: "text", width: "1fr" }],
+    }));
+  };
+
+  const updateInvoiceColumn = (id: string, field: keyof ColumnDef, value: unknown) => {
+    setInvoiceTemplate((prev) => ({
+      ...prev,
+      columns: prev.columns.map((col) => (col.id === id ? { ...col, [field]: value } : col)),
+    }));
+  };
+
+  const deleteInvoiceColumn = (id: string) => {
+    setInvoiceTemplate((prev) => ({
+      ...prev,
+      columns: prev.columns.filter((col) => col.id !== id),
+      amountFormula: {
+        ...prev.amountFormula,
+        columnIds: prev.amountFormula.columnIds.filter((cid) => cid !== id),
+      },
+    }));
+  };
+
+  const addProductField = () => {
+    const newId = `field-${Date.now()}`;
+    setProductSchema((prev) => ({
+      ...prev,
+      fields: [
+        ...prev.fields,
+        { id: newId, name: "", key: "", type: "text", required: false },
+      ],
+    }));
+  };
+
+  const updateProductField = (id: string, field: keyof ProductField, value: unknown) => {
+    setProductSchema((prev) => ({
+      ...prev,
+      fields: prev.fields.map((f) => (f.id === id ? { ...f, [field]: value } : f)),
+    }));
+  };
+
+  const deleteProductField = (id: string) => {
+    setProductSchema((prev) => ({
+      ...prev,
+      fields: prev.fields.filter((f) => f.id !== id),
+    }));
+  };
+
+  const toggleAmountFormulaColumn = (columnId: string) => {
+    setInvoiceTemplate((prev) => ({
+      ...prev,
+      amountFormula: {
+        ...prev.amountFormula,
+        columnIds: prev.amountFormula.columnIds.includes(columnId)
+          ? prev.amountFormula.columnIds.filter((id) => id !== columnId)
+          : [...prev.amountFormula.columnIds, columnId],
+      },
+    }));
+  };
+
+  const togglePlatform = (platform: string) => {
+    setContentData((prev) => ({
+      ...prev,
+      platforms_enabled: {
+        ...prev.platforms_enabled,
+        [platform]: !prev.platforms_enabled[platform],
+      },
+    }));
+  };
+
+  const toggleSwitch = (field: "auto_approve" | "enableInventory" | "enableVariants") => {
+    if (field === "auto_approve") {
+      setContentData((prev) => ({ ...prev, auto_approve: !prev.auto_approve }));
+    } else if (field === "enableInventory") {
+      setProductSchema((prev) => ({ ...prev, enableInventory: !prev.enableInventory }));
+    } else if (field === "enableVariants") {
+      setProductSchema((prev) => ({ ...prev, enableVariants: !prev.enableVariants }));
+    }
+  };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[--sl-ice] via-white to-[--sl-blue-10] p-8">
-        <div className="flex items-center justify-center h-96">
-          <p className="text-[--sl-navy]">Loading tenant configuration...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!tenant) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[--sl-ice] via-white to-[--sl-blue-10] p-8">
-        <div className="text-center">
-          <p className="text-[--sl-navy] mb-4">Tenant not found</p>
-          <Link href="/admin/tenants" className="text-[--sl-blue] hover:underline">
-            Back to Tenants
-          </Link>
-        </div>
-      </div>
-    );
+    return <div className="p-6 text-center text-[var(--sl-navy)]">Loading...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[--sl-ice] via-white to-[--sl-blue-10] p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/admin/tenants"
-            className="inline-flex items-center gap-2 text-[--sl-blue] hover:text-[--sl-navy] mb-4 transition"
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.back()}
+            className="p-2 rounded-lg hover:bg-white/50 transition-colors"
           >
-            <ArrowLeft size={18} />
-            Back to Tenants
-          </Link>
-
-          <h1 className="text-4xl font-bold text-[--sl-navy] mb-2">{tenant.name}</h1>
-          <p className="text-[--sl-navy]/60">Tenant Configuration</p>
-        </div>
-
-        {/* Status Messages */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-            <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-red-800">{error}</p>
-          </div>
-        )}
-
-        {success && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-            <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
-            <p className="text-green-800">{success}</p>
-          </div>
-        )}
-
-        {/* Tabs */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="border-b border-[--sl-blue-10]">
-            <div className="flex overflow-x-auto">
-              {(["invoicing", "ecommerce", "content", "profile"] as ConfigTab[]).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-4 font-medium whitespace-nowrap transition border-b-2 flex items-center gap-2 ${
-                    activeTab === tab
-                      ? "text-[--sl-navy] border-[--sl-blue]"
-                      : "text-[--sl-navy]/60 border-transparent hover:text-[--sl-navy]"
-                  }`}
-                >
-                  {tab === "invoicing" && <FileText size={18} />}
-                  {tab === "ecommerce" && <Package size={18} />}
-                  {tab === "content" && <Share2 size={18} />}
-                  {tab === "profile" && <User size={18} />}
-                  {tab === "invoicing" && "Invoice Template"}
-                  {tab === "ecommerce" && "Product Fields"}
-                  {tab === "content" && "Content & Social"}
-                  {tab === "profile" && "Tenant Profile"}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Tab Content */}
-          <div className="p-8">
-            {/* Invoice Template Tab */}
-            {activeTab === "invoicing" && (
-              <InvoiceTemplateTab
-                template={invoiceTemplate}
-                setTemplate={setInvoiceTemplate}
-              />
-            )}
-
-            {/* Product Fields Tab */}
-            {activeTab === "ecommerce" && (
-              <ProductSchemaTab
-                schema={productSchema}
-                setSchema={setProductSchema}
-              />
-            )}
-
-            {/* Content & Social Tab */}
-            {activeTab === "content" && (
-              <ContentSocialTab
-                data={contentData}
-                setData={setContentData}
-              />
-            )}
-
-            {/* Tenant Profile Tab */}
-            {activeTab === "profile" && (
-              <TenantProfileTab tenant={tenant} />
-            )}
-
-            {/* Save Button (for non-profile tabs) */}
-            {activeTab !== "profile" && (
-              <div className="mt-8 flex justify-end">
-                <button
-                  onClick={saveConfig}
-                  disabled={saving}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[--sl-blue] text-white rounded-lg hover:bg-[--sl-navy] disabled:opacity-50 disabled:cursor-not-allowed transition"
-                >
-                  <Save size={18} />
-                  {saving ? "Saving..." : "Save Configuration"}
-                </button>
-              </div>
-            )}
+            <ArrowLeft className="w-5 h-5 text-[var(--sl-navy)]" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-[var(--sl-navy)]">{tenant?.name || "Loading..."}</h1>
+            <p className="text-sm text-[var(--sl-navy)] opacity-50">Tenant Configuration</p>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Invoice Template Tab Component
-function InvoiceTemplateTab({
-  template,
-  setTemplate,
-}: {
-  template: InvoiceTemplate;
-  setTemplate: (template: InvoiceTemplate) => void;
-}) {
-  const addColumn = () => {
-    const newColumn: ColumnDef = {
-      id: `col_${Date.now()}`,
-      name: "New Column",
-      type: "text",
-      width: "100px",
-    };
-    setTemplate({
-      ...template,
-      columns: [...template.columns, newColumn],
-    });
-  };
-
-  const updateColumn = (id: string, updates: Partial<ColumnDef>) => {
-    setTemplate({
-      ...template,
-      columns: template.columns.map((col) =>
-        col.id === id ? { ...col, ...updates } : col
-      ),
-    });
-  };
-
-  const deleteColumn = (id: string) => {
-    setTemplate({
-      ...template,
-      columns: template.columns.filter((col) => col.id !== id),
-    });
-  };
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Invoice Columns
-        </h3>
-        <div className="space-y-4">
-          {template.columns.length === 0 ? (
-            <p className="text-[--sl-navy]/60 py-8 text-center">No columns configured yet</p>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--sl-blue)] text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+        >
+          {success ? (
+            <>
+              <CheckCircle className="w-4 h-4" />
+              <span>Saved!</span>
+            </>
           ) : (
-            template.columns.map((column) => (
-              <div
-                key={column.id}
-                className="p-4 border border-[--sl-blue-10] rounded-lg space-y-3"
+            <>
+              <Save className="w-4 h-4" />
+              <span>Save</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Tabs */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setActiveTab("invoicing")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            activeTab === "invoicing"
+              ? "bg-[var(--sl-blue)] text-white"
+              : "bg-white border border-[var(--sl-blue-10)] text-[var(--sl-navy)] opacity-60 hover:opacity-100"
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          Invoice Template
+        </button>
+        <button
+          onClick={() => setActiveTab("ecommerce")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            activeTab === "ecommerce"
+              ? "bg-[var(--sl-blue)] text-white"
+              : "bg-white border border-[var(--sl-blue-10)] text-[var(--sl-navy)] opacity-60 hover:opacity-100"
+          }`}
+        >
+          <Package className="w-4 h-4" />
+          Product Fields
+        </button>
+        <button
+          onClick={() => setActiveTab("content")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            activeTab === "content"
+              ? "bg-[var(--sl-blue)] text-white"
+              : "bg-white border border-[var(--sl-blue-10)] text-[var(--sl-navy)] opacity-60 hover:opacity-100"
+          }`}
+        >
+          <Share2 className="w-4 h-4" />
+          Content & Social
+        </button>
+        <button
+          onClick={() => setActiveTab("profile")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+            activeTab === "profile"
+              ? "bg-[var(--sl-blue)] text-white"
+              : "bg-white border border-[var(--sl-blue-10)] text-[var(--sl-navy)] opacity-60 hover:opacity-100"
+          }`}
+        >
+          <User className="w-4 h-4" />
+          Tenant Profile
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === "invoicing" && (
+        <div className="space-y-6">
+          {/* Invoice Columns Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-semibold text-[var(--sl-navy)]">Invoice Columns</h2>
+                <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Define the columns that appear on invoices</p>
+              </div>
+              <button
+                onClick={addInvoiceColumn}
+                className="flex items-center gap-1 text-xs font-medium text-[var(--sl-blue)] hover:underline"
               >
-                <div className="flex items-center gap-3">
-                  <GripVertical size={18} className="text-[--sl-navy]/40 cursor-move" />
+                <Plus className="w-3 h-3" />
+                Add Column
+              </button>
+            </div>
+            <div className="space-y-2">
+              {invoiceTemplate.columns.map((column) => (
+                <div
+                  key={column.id}
+                  className="bg-[var(--sl-ice)] rounded-lg px-3 py-2.5 flex items-center gap-3"
+                >
+                  <GripVertical className="w-4 h-4 text-gray-300 shrink-0" />
                   <input
                     type="text"
-                    value={column.name}
-                    onChange={(e) =>
-                      updateColumn(column.id, { name: e.target.value })
-                    }
-                    className="flex-1 px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
                     placeholder="Column name"
+                    value={column.name}
+                    onChange={(e) => updateInvoiceColumn(column.id, "name", e.target.value)}
+                    className="flex-1 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
                   />
                   <select
                     value={column.type}
-                    onChange={(e) =>
-                      updateColumn(column.id, {
-                        type: e.target.value as "text" | "number" | "currency",
-                      })
-                    }
-                    className="px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
+                    onChange={(e) => updateInvoiceColumn(column.id, "type", e.target.value)}
+                    className="px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
                   >
                     <option value="text">Text</option>
                     <option value="number">Number</option>
@@ -410,645 +396,551 @@ function InvoiceTemplateTab({
                   </select>
                   <input
                     type="text"
+                    placeholder="Width (e.g., 1fr)"
                     value={column.width}
-                    onChange={(e) =>
-                      updateColumn(column.id, { width: e.target.value })
-                    }
-                    className="w-24 px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-                    placeholder="Width"
+                    onChange={(e) => updateInvoiceColumn(column.id, "width", e.target.value)}
+                    className="w-20 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
                   />
                   <button
-                    onClick={() => deleteColumn(column.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                    onClick={() => deleteInvoiceColumn(column.id)}
+                    className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-20 transition-colors"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 className="w-4 h-4" />
                   </button>
+                </div>
+              ))}
+              {invoiceTemplate.columns.length === 0 && (
+                <p className="text-xs text-[var(--sl-navy)] opacity-40 py-2">No columns yet</p>
+              )}
+            </div>
+          </div>
+
+          {/* Amount Calculation Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Amount Calculation</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">How to calculate line item amounts</p>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-2">Formula Type</label>
+                <select
+                  value={invoiceTemplate.amountFormula.type}
+                  onChange={(e) =>
+                    setInvoiceTemplate((prev) => ({
+                      ...prev,
+                      amountFormula: { ...prev.amountFormula, type: e.target.value as any },
+                    }))
+                  }
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                >
+                  <option value="manual">Manual Entry</option>
+                  <option value="multiply">Multiply Columns</option>
+                  <option value="sum">Sum Columns</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-2">Columns to Include</label>
+                <div className="flex flex-wrap gap-2">
+                  {invoiceTemplate.columns.map((col) => (
+                    <button
+                      key={col.id}
+                      onClick={() => toggleAmountFormulaColumn(col.id)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                        invoiceTemplate.amountFormula.columnIds.includes(col.id)
+                          ? "bg-[var(--sl-blue)] text-white"
+                          : "bg-[var(--sl-ice)] border border-[var(--sl-blue-10)] text-[var(--sl-navy)] opacity-60"
+                      }`}
+                    >
+                      {col.name || "Unnamed"}
+                    </button>
+                  ))}
                 </div>
               </div>
-            ))
-          )}
-        </div>
-        <button
-          onClick={addColumn}
-          className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[--sl-blue] border border-[--sl-blue] rounded hover:bg-[--sl-blue-10] transition"
-        >
-          <Plus size={18} />
-          Add Column
-        </button>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8">
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Amount Formula
-        </h3>
-        <select
-          value={template.amountFormula.type}
-          onChange={(e) =>
-            setTemplate({
-              ...template,
-              amountFormula: {
-                ...template.amountFormula,
-                type: e.target.value as "manual" | "multiply" | "sum",
-              },
-            })
-          }
-          className="px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-        >
-          <option value="manual">Manual</option>
-          <option value="multiply">Multiply Columns</option>
-          <option value="sum">Sum Columns</option>
-        </select>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8 space-y-4">
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Default Values
-        </h3>
-
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Default Terms
-          </label>
-          <textarea
-            value={template.defaultTerms}
-            onChange={(e) =>
-              setTemplate({ ...template, defaultTerms: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            rows={3}
-            placeholder="Default payment terms..."
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Default Notes
-          </label>
-          <textarea
-            value={template.defaultNotes}
-            onChange={(e) =>
-              setTemplate({ ...template, defaultNotes: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            rows={3}
-            placeholder="Default invoice notes..."
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Default Tax Rate (%)
-          </label>
-          <input
-            type="number"
-            value={template.defaultTaxRate}
-            onChange={(e) =>
-              setTemplate({ ...template, defaultTaxRate: parseFloat(e.target.value) })
-            }
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            step="0.01"
-            min="0"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Product Schema Tab Component
-function ProductSchemaTab({
-  schema,
-  setSchema,
-}: {
-  schema: ProductSchema;
-  setSchema: (schema: ProductSchema) => void;
-}) {
-  const addField = () => {
-    const newField: ProductField = {
-      id: `field_${Date.now()}`,
-      name: "New Field",
-      key: `new_field_${Date.now()}`,
-      type: "text",
-      required: false,
-    };
-    setSchema({
-      ...schema,
-      fields: [...schema.fields, newField],
-    });
-  };
-
-  const updateField = (id: string, updates: Partial<ProductField>) => {
-    setSchema({
-      ...schema,
-      fields: schema.fields.map((field) =>
-        field.id === id ? { ...field, ...updates } : field
-      ),
-    });
-  };
-
-  const deleteField = (id: string) => {
-    setSchema({
-      ...schema,
-      fields: schema.fields.filter((field) => field.id !== id),
-    });
-  };
-
-  const parseOptions = (str: string): string[] => {
-    return str.split("\n").filter((opt) => opt.trim());
-  };
-
-  const formatOptions = (arr: string[]): string => {
-    return arr.join("\n");
-  };
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Product Fields
-        </h3>
-        <div className="space-y-4">
-          {schema.fields.length === 0 ? (
-            <p className="text-[--sl-navy]/60 py-8 text-center">No fields configured yet</p>
-          ) : (
-            schema.fields.map((field) => (
-              <div
-                key={field.id}
-                className="p-4 border border-[--sl-blue-10] rounded-lg space-y-3"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <GripVertical size={18} className="text-[--sl-navy]/40 cursor-move" />
-                  <input
-                    type="text"
-                    value={field.name}
-                    onChange={(e) =>
-                      updateField(field.id, { name: e.target.value })
-                    }
-                    className="flex-1 px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-                    placeholder="Field label"
-                  />
-                  <input
-                    type="text"
-                    value={field.key}
-                    onChange={(e) =>
-                      updateField(field.id, { key: e.target.value })
-                    }
-                    className="flex-1 px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-                    placeholder="Field key (snake_case)"
-                  />
-                  <button
-                    onClick={() => deleteField(field.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Formula Preview</label>
+                <div className="px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] bg-[var(--sl-ice)] text-xs text-[var(--sl-navy)] font-mono">
+                  {invoiceTemplate.amountFormula.type === "manual"
+                    ? "Manual entry"
+                    : invoiceTemplate.amountFormula.type === "multiply"
+                    ? `${invoiceTemplate.amountFormula.columnIds.join(" × ")}`
+                    : `${invoiceTemplate.amountFormula.columnIds.join(" + ")}`}
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div className="grid grid-cols-2 gap-3 ml-6">
-                  <div>
-                    <label className="block text-sm text-[--sl-navy]/60 mb-1">
-                      Type
-                    </label>
+          {/* Default Invoice Settings Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Default Invoice Settings</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Default values for new invoices</p>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Default Tax Rate (%)</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value={invoiceTemplate.defaultTaxRate}
+                  onChange={(e) =>
+                    setInvoiceTemplate((prev) => ({
+                      ...prev,
+                      defaultTaxRate: parseFloat(e.target.value) || 0,
+                    }))
+                  }
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Default Terms</label>
+                <textarea
+                  value={invoiceTemplate.defaultTerms}
+                  onChange={(e) =>
+                    setInvoiceTemplate((prev) => ({
+                      ...prev,
+                      defaultTerms: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g., Payment due within 30 days"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] resize-none"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Default Notes</label>
+                <textarea
+                  value={invoiceTemplate.defaultNotes}
+                  onChange={(e) =>
+                    setInvoiceTemplate((prev) => ({
+                      ...prev,
+                      defaultNotes: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g., Thank you for your business"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] resize-none"
+                  rows={3}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "ecommerce" && (
+        <div className="space-y-6">
+          {/* Product Fields Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-semibold text-[var(--sl-navy)]">Product Fields</h2>
+                <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Customize the product form for your clients</p>
+              </div>
+              <button
+                onClick={addProductField}
+                className="flex items-center gap-1 text-xs font-medium text-[var(--sl-blue)] hover:underline"
+              >
+                <Plus className="w-3 h-3" />
+                Add Field
+              </button>
+            </div>
+            <div className="space-y-2">
+              {productSchema.fields.map((field) => (
+                <div
+                  key={field.id}
+                  className="bg-[var(--sl-ice)] rounded-lg px-3 py-2.5 space-y-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <GripVertical className="w-4 h-4 text-gray-300 shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Field name"
+                      value={field.name}
+                      onChange={(e) => updateProductField(field.id, "name", e.target.value)}
+                      className="flex-1 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
+                    />
                     <select
                       value={field.type}
-                      onChange={(e) =>
-                        updateField(field.id, {
-                          type: e.target.value as FieldType,
-                        })
-                      }
-                      className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy] text-sm"
+                      onChange={(e) => updateProductField(field.id, "type", e.target.value)}
+                      className="px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
                     >
                       <option value="text">Text</option>
                       <option value="number">Number</option>
                       <option value="currency">Currency</option>
                       <option value="select">Select</option>
+                      <option value="textarea">Textarea</option>
                       <option value="boolean">Boolean</option>
                       <option value="image">Image</option>
-                      <option value="textarea">Textarea</option>
                     </select>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => updateProductField(field.id, "required", !field.required)}
+                        className={`w-10 h-6 rounded-full transition-all flex items-center ${
+                          field.required
+                            ? "bg-[var(--sl-blue)]"
+                            : "bg-gray-200"
+                        }`}
+                      >
+                        <div
+                          className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                            field.required ? "translate-x-4" : "translate-x-0.5"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => deleteProductField(field.id)}
+                      className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-20 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-
-                  <div>
-                    <label className="flex items-center gap-2 text-sm text-[--sl-navy]">
-                      <input
-                        type="checkbox"
-                        checked={field.required}
-                        onChange={(e) =>
-                          updateField(field.id, { required: e.target.checked })
-                        }
-                        className="rounded"
-                      />
-                      Required
-                    </label>
-                  </div>
-                </div>
-
-                {field.type === "select" && (
-                  <div className="ml-6">
-                    <label className="block text-sm text-[--sl-navy]/60 mb-1">
-                      Options (one per line)
-                    </label>
-                    <textarea
-                      value={formatOptions(field.options || [])}
-                      onChange={(e) =>
-                        updateField(field.id, {
-                          options: parseOptions(e.target.value),
-                        })
-                      }
-                      className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy] text-sm"
-                      rows={2}
-                      placeholder="Option 1&#10;Option 2&#10;Option 3"
-                    />
-                  </div>
-                )}
-
-                <div className="ml-6">
-                  <label className="block text-sm text-[--sl-navy]/60 mb-1">
-                    Placeholder
-                  </label>
-                  <input
-                    type="text"
-                    value={field.placeholder || ""}
-                    onChange={(e) =>
-                      updateField(field.id, { placeholder: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy] text-sm"
-                    placeholder="Field placeholder text"
-                  />
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-        <button
-          onClick={addField}
-          className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[--sl-blue] border border-[--sl-blue] rounded hover:bg-[--sl-blue-10] transition"
-        >
-          <Plus size={18} />
-          Add Field
-        </button>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8">
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Features
-        </h3>
-        <div className="space-y-3">
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={schema.enableInventory}
-              onChange={(e) =>
-                setSchema({ ...schema, enableInventory: e.target.checked })
-              }
-              className="rounded"
-            />
-            <span className="text-[--sl-navy]">Enable Inventory Tracking</span>
-          </label>
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={schema.enableVariants}
-              onChange={(e) =>
-                setSchema({ ...schema, enableVariants: e.target.checked })
-              }
-              className="rounded"
-            />
-            <span className="text-[--sl-navy]">Enable Product Variants</span>
-          </label>
-        </div>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8">
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Form Preview
-        </h3>
-        <div className="p-4 bg-[--sl-ice] rounded border border-[--sl-blue-10]">
-          <p className="text-sm text-[--sl-navy]/60 mb-4">Preview of product form fields:</p>
-          <div className="space-y-3">
-            {schema.fields.length === 0 ? (
-              <p className="text-[--sl-navy]/40">No fields to preview</p>
-            ) : (
-              schema.fields.map((field) => (
-                <div key={field.id}>
-                  <label className="block text-sm font-medium text-[--sl-navy] mb-1">
-                    {field.name}
-                    {field.required && <span className="text-red-600">*</span>}
-                  </label>
-                  {field.type === "select" && (
-                    <select className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]/60 text-sm">
-                      <option>{field.placeholder || `Select ${field.name}`}</option>
-                      {(field.options || []).map((opt, idx) => (
-                        <option key={idx}>{opt}</option>
-                      ))}
-                    </select>
-                  )}
-                  {field.type === "textarea" && (
-                    <textarea
-                      className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]/60 text-sm"
-                      placeholder={field.placeholder}
-                      disabled
-                      rows={2}
-                    />
-                  )}
-                  {field.type === "boolean" && (
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" className="rounded" disabled />
-                      <span className="text-sm text-[--sl-navy]/60">{field.placeholder}</span>
-                    </label>
-                  )}
-                  {!["select", "textarea", "boolean"].includes(field.type) && (
+                  <div className="flex items-center gap-3 ml-7">
                     <input
-                      type={field.type === "currency" ? "number" : field.type}
-                      className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]/60 text-sm"
-                      placeholder={field.placeholder}
+                      type="text"
+                      placeholder="Key (internal name)"
+                      value={field.key}
+                      onChange={(e) => updateProductField(field.id, "key", e.target.value)}
+                      className="flex-1 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
+                    />
+                  </div>
+                  {field.type === "select" && (
+                    <div className="flex items-center gap-3 ml-7">
+                      <input
+                        type="text"
+                        placeholder="Options (comma-separated)"
+                        value={field.options?.join(", ") || ""}
+                        onChange={(e) =>
+                          updateProductField(
+                            field.id,
+                            "options",
+                            e.target.value.split(",").map((o) => o.trim())
+                          )
+                        }
+                        className="flex-1 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
+                      />
+                    </div>
+                  )}
+                  <div className="flex items-center gap-3 ml-7">
+                    <input
+                      type="text"
+                      placeholder="Placeholder text"
+                      value={field.placeholder || ""}
+                      onChange={(e) => updateProductField(field.id, "placeholder", e.target.value)}
+                      className="flex-1 px-2.5 py-1.5 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)] bg-white"
+                    />
+                  </div>
+                </div>
+              ))}
+              {productSchema.fields.length === 0 && (
+                <p className="text-xs text-[var(--sl-navy)] opacity-40 py-2">No fields yet</p>
+              )}
+            </div>
+          </div>
+
+          {/* Store Options Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Store Options</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">E-commerce features for your tenant</p>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-[var(--sl-navy)]">Inventory Tracking</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">Track product stock levels</p>
+                </div>
+                <button
+                  onClick={() => toggleSwitch("enableInventory")}
+                  className={`w-10 h-6 rounded-full transition-all flex items-center ${
+                    productSchema.enableInventory
+                      ? "bg-[var(--sl-blue)]"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                      productSchema.enableInventory ? "translate-x-4" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-[var(--sl-navy)]">Product Variants</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">Allow product variants (size, color, etc.)</p>
+                </div>
+                <button
+                  onClick={() => toggleSwitch("enableVariants")}
+                  className={`w-10 h-6 rounded-full transition-all flex items-center ${
+                    productSchema.enableVariants
+                      ? "bg-[var(--sl-blue)]"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                      productSchema.enableVariants ? "translate-x-4" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Form Preview Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Form Preview</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">This is what your clients will see</p>
+            </div>
+            <div className="mt-4 p-4 bg-[var(--sl-ice)] rounded-lg space-y-3">
+              {productSchema.fields.map((field) => (
+                <div key={field.id}>
+                  <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">
+                    {field.name || "Unnamed Field"}
+                    {field.required && <span className="text-red-500 ml-1">*</span>}
+                  </label>
+                  {field.type === "select" ? (
+                    <select
                       disabled
+                      className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50"
+                    >
+                      <option>{field.placeholder || "Select option"}</option>
+                    </select>
+                  ) : field.type === "textarea" ? (
+                    <textarea
+                      disabled
+                      placeholder={field.placeholder}
+                      className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50 resize-none"
+                      rows={3}
+                    />
+                  ) : field.type === "boolean" ? (
+                    <input type="checkbox" disabled className="w-4 h-4 opacity-50" />
+                  ) : (
+                    <input
+                      type={field.type === "number" ? "number" : field.type === "currency" ? "text" : "text"}
+                      disabled
+                      placeholder={field.placeholder}
+                      className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] opacity-50"
                     />
                   )}
                 </div>
-              ))
-            )}
+              ))}
+              {productSchema.fields.length === 0 && (
+                <p className="text-xs text-[var(--sl-navy)] opacity-40">No fields configured</p>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
+      )}
 
-// Content & Social Tab Component
-function ContentSocialTab({
-  data,
-  setData,
-}: {
-  data: {
-    industry: string;
-    target_audience: string;
-    brand_tone: string;
-    website_url: string;
-    notification_email: string;
-    auto_approve: boolean;
-    platforms_enabled: Record<string, boolean>;
-  };
-  setData: (data: any) => void;
-}) {
-  const updatePlatform = (platform: string, enabled: boolean) => {
-    setData({
-      ...data,
-      platforms_enabled: {
-        ...data.platforms_enabled,
-        [platform]: enabled,
-      },
-    });
-  };
+      {activeTab === "content" && (
+        <div className="space-y-6">
+          {/* Business Details Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Business Details</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Information about the tenant business</p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Industry</label>
+                <input
+                  type="text"
+                  value={contentData.industry}
+                  onChange={(e) => setContentData((prev) => ({ ...prev, industry: e.target.value }))}
+                  placeholder="e.g., SaaS, E-commerce"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Target Audience</label>
+                <input
+                  type="text"
+                  value={contentData.target_audience}
+                  onChange={(e) => setContentData((prev) => ({ ...prev, target_audience: e.target.value }))}
+                  placeholder="e.g., Startups, Enterprises"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Website URL</label>
+                <input
+                  type="text"
+                  value={contentData.website_url}
+                  onChange={(e) => setContentData((prev) => ({ ...prev, website_url: e.target.value }))}
+                  placeholder="https://example.com"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Brand Tone</label>
+                <select
+                  value={contentData.brand_tone}
+                  onChange={(e) => setContentData((prev) => ({ ...prev, brand_tone: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                >
+                  <option value="">Select tone</option>
+                  <option value="professional">Professional</option>
+                  <option value="casual">Casual</option>
+                  <option value="playful">Playful</option>
+                  <option value="technical">Technical</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
-  return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Industry
-          </label>
-          <input
-            type="text"
-            value={data.industry}
-            onChange={(e) => setData({ ...data, industry: e.target.value })}
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            placeholder="e.g., Technology, Retail, Services"
-          />
+          {/* Notification Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Notifications</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Configure notification and approval settings</p>
+            </div>
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-[var(--sl-navy)] opacity-60 mb-1">Notification Email</label>
+                <input
+                  type="email"
+                  value={contentData.notification_email}
+                  onChange={(e) => setContentData((prev) => ({ ...prev, notification_email: e.target.value }))}
+                  placeholder="notifications@example.com"
+                  className="w-full px-3 py-2 rounded-lg border border-[var(--sl-blue-10)] text-sm text-[var(--sl-navy)] focus:outline-none focus:border-[var(--sl-blue)]"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-[var(--sl-navy)]">Auto-Approve Invoices</p>
+                  <p className="text-xs text-[var(--sl-navy)] opacity-40">Automatically approve invoices without review</p>
+                </div>
+                <button
+                  onClick={() => toggleSwitch("auto_approve")}
+                  className={`w-10 h-6 rounded-full transition-all flex items-center ${
+                    contentData.auto_approve
+                      ? "bg-[var(--sl-blue)]"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                      contentData.auto_approve ? "translate-x-4" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Platforms Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div>
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Enabled Platforms</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Which platforms this tenant can use</p>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Shopify", "WooCommerce", "Square", "Stripe"].map((platform) => (
+                <button
+                  key={platform}
+                  onClick={() => togglePlatform(platform)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                    contentData.platforms_enabled[platform]
+                      ? "bg-[var(--sl-blue)] text-white"
+                      : "bg-[var(--sl-ice)] border border-[var(--sl-blue-10)] text-[var(--sl-navy)] opacity-60"
+                  }`}
+                >
+                  {platform}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
+      )}
 
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Target Audience
-          </label>
-          <input
-            type="text"
-            value={data.target_audience}
-            onChange={(e) => setData({ ...data, target_audience: e.target.value })}
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            placeholder="e.g., Small businesses, Startups"
-          />
+      {activeTab === "profile" && (
+        <div className="space-y-6">
+          {/* Profile Card */}
+          <div className="bg-white rounded-xl border border-[var(--sl-blue-10)] p-6">
+            <div className="mb-6">
+              <h2 className="text-base font-semibold text-[var(--sl-navy)]">Tenant Information</h2>
+              <p className="text-xs text-[var(--sl-navy)] opacity-40 mt-0.5">Read-only tenant details</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Name</p>
+                <p className="text-sm text-[var(--sl-navy)]">{tenant?.name || "—"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Slug</p>
+                <p className="text-sm text-[var(--sl-navy)]">{tenant?.slug || "—"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Industry</p>
+                <p className="text-sm text-[var(--sl-navy)]">{tenant?.industry || "—"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Plan</p>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-[var(--sl-ice)] text-[var(--sl-navy)]">
+                    {tenant?.plan || "—"}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Email</p>
+                <p className="text-sm text-[var(--sl-navy)]">{tenant?.notification_email || "—"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Website</p>
+                {tenant?.website_url ? (
+                  <a
+                    href={tenant.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[var(--sl-blue)] hover:underline"
+                  >
+                    {tenant.website_url}
+                  </a>
+                ) : (
+                  <p className="text-sm text-[var(--sl-navy)]">—</p>
+                )}
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Custom Domain</p>
+                <p className="text-sm text-[var(--sl-navy)]">{tenant?.custom_domain || "—"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Brand Tone</p>
+                <p className="text-sm text-[var(--sl-navy)]">{tenant?.brand_tone || "—"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Created</p>
+                <p className="text-sm text-[var(--sl-navy)]">
+                  {tenant?.created_at ? new Date(tenant.created_at).toLocaleDateString() : "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Updated</p>
+                <p className="text-sm text-[var(--sl-navy)]">
+                  {tenant?.updated_at ? new Date(tenant.updated_at).toLocaleDateString() : "—"}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 pt-6 border-t border-[var(--sl-blue-10)]">
+              <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-2">Tenant ID</p>
+              <p className="text-xs text-[var(--sl-navy)] font-mono bg-[var(--sl-ice)] px-3 py-2 rounded-lg break-all">
+                {tenant?.id || "—"}
+              </p>
+            </div>
+            <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
+              <p className="text-xs text-blue-700">
+                This information is read-only. Contact support to modify tenant details.
+              </p>
+            </div>
+          </div>
         </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Brand Tone
-          </label>
-          <textarea
-            value={data.brand_tone}
-            onChange={(e) => setData({ ...data, brand_tone: e.target.value })}
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            rows={3}
-            placeholder="Describe the brand voice and tone..."
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Website URL
-          </label>
-          <input
-            type="url"
-            value={data.website_url}
-            onChange={(e) => setData({ ...data, website_url: e.target.value })}
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            placeholder="https://example.com"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-[--sl-navy] mb-2">
-            Notification Email
-          </label>
-          <input
-            type="email"
-            value={data.notification_email}
-            onChange={(e) => setData({ ...data, notification_email: e.target.value })}
-            className="w-full px-3 py-2 border border-[--sl-blue-10] rounded text-[--sl-navy]"
-            placeholder="notifications@example.com"
-          />
-        </div>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8">
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Auto-Approval
-        </h3>
-        <label className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            checked={data.auto_approve}
-            onChange={(e) => setData({ ...data, auto_approve: e.target.checked })}
-            className="rounded"
-          />
-          <span className="text-[--sl-navy]">Automatically approve content submissions</span>
-        </label>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8">
-        <h3 className="text-lg font-semibold text-[--sl-navy] mb-4">
-          Enabled Platforms
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <label className="flex items-center gap-3 p-3 border border-[--sl-blue-10] rounded cursor-pointer hover:bg-[--sl-ice] transition">
-            <input
-              type="checkbox"
-              checked={data.platforms_enabled.blog || false}
-              onChange={(e) => updatePlatform("blog", e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-[--sl-navy]">Blog</span>
-          </label>
-
-          <label className="flex items-center gap-3 p-3 border border-[--sl-blue-10] rounded cursor-pointer hover:bg-[--sl-ice] transition">
-            <input
-              type="checkbox"
-              checked={data.platforms_enabled.facebook || false}
-              onChange={(e) => updatePlatform("facebook", e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-[--sl-navy]">Facebook</span>
-          </label>
-
-          <label className="flex items-center gap-3 p-3 border border-[--sl-blue-10] rounded cursor-pointer hover:bg-[--sl-ice] transition">
-            <input
-              type="checkbox"
-              checked={data.platforms_enabled.instagram || false}
-              onChange={(e) => updatePlatform("instagram", e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-[--sl-navy]">Instagram</span>
-          </label>
-
-          <label className="flex items-center gap-3 p-3 border border-[--sl-blue-10] rounded cursor-pointer hover:bg-[--sl-ice] transition">
-            <input
-              type="checkbox"
-              checked={data.platforms_enabled.google_business || false}
-              onChange={(e) => updatePlatform("google_business", e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-[--sl-navy]">Google Business</span>
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Tenant Profile Tab Component
-function TenantProfileTab({ tenant }: { tenant: TenantData }) {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Name
-          </h4>
-          <p className="text-lg text-[--sl-navy] font-medium">{tenant.name}</p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Slug
-          </h4>
-          <p className="text-lg text-[--sl-navy] font-mono">{tenant.slug || "—"}</p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Industry
-          </h4>
-          <p className="text-lg text-[--sl-navy]">{tenant.industry || "—"}</p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Plan
-          </h4>
-          <p className="text-lg text-[--sl-navy]">
-            <span className="inline-block px-3 py-1 bg-[--sl-lime-20] text-[--sl-navy] rounded-full text-sm font-medium">
-              {tenant.plan || "Standard"}
-            </span>
-          </p>
-        </div>
-
-        <div className="md:col-span-2">
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Email
-          </h4>
-          <p className="text-lg text-[--sl-navy] font-mono">{tenant.notification_email || "—"}</p>
-        </div>
-
-        <div className="md:col-span-2">
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Website
-          </h4>
-          {tenant.website_url ? (
-            <a
-              href={tenant.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-lg text-[--sl-blue] hover:text-[--sl-navy] break-all"
-            >
-              {tenant.website_url}
-            </a>
-          ) : (
-            <p className="text-lg text-[--sl-navy]">—</p>
-          )}
-        </div>
-
-        <div className="md:col-span-2">
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Custom Domain
-          </h4>
-          <p className="text-lg text-[--sl-navy]">{tenant.custom_domain || "—"}</p>
-        </div>
-
-        <div className="md:col-span-2">
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Brand Tone
-          </h4>
-          <p className="text-lg text-[--sl-navy] whitespace-pre-wrap">
-            {tenant.brand_tone || "—"}
-          </p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Created
-          </h4>
-          <p className="text-lg text-[--sl-navy]">
-            {tenant.created_at
-              ? new Date(tenant.created_at).toLocaleDateString()
-              : "—"}
-          </p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-2">
-            Updated
-          </h4>
-          <p className="text-lg text-[--sl-navy]">
-            {tenant.updated_at
-              ? new Date(tenant.updated_at).toLocaleDateString()
-              : "—"}
-          </p>
-        </div>
-      </div>
-
-      <div className="border-t border-[--sl-blue-10] pt-8">
-        <h4 className="text-sm font-semibold text-[--sl-navy]/60 uppercase tracking-wide mb-4">
-          Tenant ID
-        </h4>
-        <p className="text-sm text-[--sl-navy] font-mono bg-[--sl-ice] p-3 rounded border border-[--sl-blue-10]">
-          {tenant.id}
-        </p>
-      </div>
-
-      <div className="rounded-lg bg-[--sl-blue-10] p-4 border border-[--sl-blue] text-[--sl-navy] text-sm">
-        This is a read-only view of the tenant profile. To edit these details, use the Invoice Template,
-        Product Fields, or Content & Social tabs.
-      </div>
+      )}
     </div>
   );
 }
