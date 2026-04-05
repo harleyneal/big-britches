@@ -115,7 +115,7 @@ The topic should be:
 - Currently trending or seasonally relevant
 - Valuable for our target audience
 - Suitable for a ${contentClient.brand_tone} tone of voice
-- Suitable for publishing on LinkedIn, Medium, and Google Business Profile
+- Suitable for publishing on a blog, Facebook, Instagram, and Google Business Profile
 
 Return ONLY the topic name as a single sentence, nothing else.`,
       },

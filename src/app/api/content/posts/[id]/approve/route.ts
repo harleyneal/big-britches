@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { getAdminClient } from "@/lib/supabase";
 import { ContentClient, ContentPost } from "@/lib/content/types";
 import { logAction } from "@/lib/content/logger";
-import { publishToWebsite, distributePost } from "@/lib/content/platforms";
+import { distributePost } from "@/lib/content/platforms";
 import { sendPublishedEmail } from "@/lib/content/email";
 
 /**
@@ -71,29 +71,50 @@ export async function POST(
       throw new Error("Client not found");
     }
 
-    // Publish to website
-    const websiteResult = await publishToWebsite(
-      client as ContentClient,
-      approvedPost as ContentPost
-    );
+    // Publish to blog if enabled
+    const contentClient = client as ContentClient;
+    let originalUrl = post.original_url || "";
 
-    let originalUrl = websiteResult.external_url || post.original_url;
+    if (contentClient.platforms_enabled.blog) {
+      try {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+        const blogRes = await fetch(`${appUrl}/api/blog`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: approvedPost.title,
+            body_html: approvedPost.body_html,
+            body_markdown: approvedPost.body_markdown,
+            excerpt: approvedPost.meta_description,
+            status: "published",
+            tenant_id: post.client_id,
+          }),
+        });
 
-    if (websiteResult.success && websiteResult.external_url) {
-      // Update post with original_url
-      await supabase
-        .from("content_posts")
-        .update({
-          original_url: websiteResult.external_url,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", id);
-
-      originalUrl = websiteResult.external_url;
+        if (blogRes.ok) {
+          const blogData = await blogRes.json();
+          originalUrl = `${contentClient.website_url}/blog/${blogData.post?.slug || approvedPost.slug}`;
+        }
+      } catch (blogError) {
+        console.error("Failed to publish blog post:", blogError);
+      }
     }
 
+    if (!originalUrl) {
+      originalUrl = `${contentClient.website_url}/blog/${approvedPost.slug}`;
+    }
+
+    // Update post with original_url
+    await supabase
+      .from("content_posts")
+      .update({
+        original_url: originalUrl,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+
     // Distribute to platforms
-    const distributionResults = await distributePost(client as ContentClient, {
+    const distributionResults = await distributePost(contentClient, {
       ...approvedPost,
       original_url: originalUrl,
     } as ContentPost);
@@ -158,7 +179,6 @@ export async function POST(
       JSON.stringify({
         post: publishedPost,
         distributions,
-        website: websiteResult,
       }),
       {
         status: 200,

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { getAdminClient } from "@/lib/supabase";
 import { ContentClient, ContentPost } from "@/lib/content/types";
 import { logAction } from "@/lib/content/logger";
-import { publishToWebsite, distributePost } from "@/lib/content/platforms";
+import { distributePost } from "@/lib/content/platforms";
 import { sendPublishedEmail } from "@/lib/content/email";
 
 /**
@@ -56,49 +56,67 @@ export async function POST(
     }
 
     const results = {
-      website: null as { platform: string; success: boolean; external_url?: string; error_message?: string } | null,
+      blog: null as { success: boolean; url?: string; error?: string } | null,
       distributions: [] as Record<string, unknown>[],
       published_at: new Date().toISOString(),
     };
 
-    // 1. Publish to website
-    const websiteResult = await publishToWebsite(
-      client as ContentClient,
-      post as ContentPost
-    );
-    results.website = websiteResult;
+    // 1. Publish to blog if enabled
+    let blogUrl = "";
+    const contentClient = client as ContentClient;
+    if (contentClient.platforms_enabled.blog) {
+      try {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+        const blogRes = await fetch(`${appUrl}/api/blog`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: post.title,
+            body_html: post.body_html,
+            body_markdown: post.body_markdown,
+            excerpt: post.meta_description,
+            status: "published",
+            tenant_id: post.client_id,
+          }),
+        });
 
-    if (websiteResult.success && websiteResult.external_url) {
-      // Update post with original_url
-      await supabase
-        .from("content_posts")
-        .update({
-          original_url: websiteResult.external_url,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", id);
-
-      await logAction(
-        post.client_id,
-        "published",
-        `Post "${post.title}" published to website: ${websiteResult.external_url}`,
-        id
-      );
-    } else {
-      await logAction(
-        post.client_id,
-        "error",
-        `Failed to publish to website: ${websiteResult.error_message}`,
-        id
-      );
+        if (blogRes.ok) {
+          const blogData = await blogRes.json();
+          blogUrl = `${contentClient.website_url}/blog/${blogData.post?.slug || post.slug}`;
+          results.blog = { success: true, url: blogUrl };
+        } else {
+          results.blog = { success: false, error: "Failed to create blog post" };
+        }
+      } catch (blogError) {
+        const msg = blogError instanceof Error ? blogError.message : String(blogError);
+        results.blog = { success: false, error: msg };
+      }
     }
+
+    const originalUrl = blogUrl || `${contentClient.website_url}/blog/${post.slug}`;
+
+    // Update post with original_url
+    await supabase
+      .from("content_posts")
+      .update({
+        original_url: originalUrl,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+
+    await logAction(
+      post.client_id,
+      "published",
+      `Post "${post.title}" published to blog: ${originalUrl}`,
+      id
+    );
 
     // 2. Distribute to platforms
     const distributionResults = await distributePost(
-      client as ContentClient,
+      contentClient,
       {
         ...post,
-        original_url: websiteResult.external_url || post.original_url,
+        original_url: originalUrl,
       } as ContentPost
     );
 
@@ -162,7 +180,7 @@ export async function POST(
       await sendPublishedEmail(
         publishedPost as ContentPost,
         client as ContentClient,
-        websiteResult.external_url || post.original_url || ""
+        originalUrl || post.original_url || ""
       );
     } catch (emailError) {
       console.error("Failed to send published email:", emailError);

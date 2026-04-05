@@ -4,7 +4,7 @@ import { generateContent } from "@/lib/content/generator";
 import { ContentClient, ContentPost } from "@/lib/content/types";
 import { logAction } from "@/lib/content/logger";
 import { sendApprovalEmail, sendGenerationErrorEmail } from "@/lib/content/email";
-import { publishToWebsite, distributePost } from "@/lib/content/platforms";
+import { distributePost } from "@/lib/content/platforms";
 
 /**
  * Shared pipeline logic for both GET (Vercel cron) and POST (manual trigger)
@@ -97,52 +97,71 @@ async function runGenerationPipeline(req: NextRequest) {
       // Step 3: Handle post based on auto_approve setting
       if (client.auto_approve) {
         try {
-          const websiteResult = await publishToWebsite(
-            client,
-            insertedPost as ContentPost
-          );
-
-          if (websiteResult.success && websiteResult.external_url) {
-            await supabase
-              .from("content_posts")
-              .update({ original_url: websiteResult.external_url })
-              .eq("id", insertedPost.id);
-
-            const distributionResults = await distributePost(client, {
-              ...insertedPost,
-              original_url: websiteResult.external_url,
-            } as ContentPost);
-
-            for (const distResult of distributionResults) {
-              await supabase.from("content_distributions").insert([
-                {
-                  post_id: insertedPost.id,
-                  platform: distResult.platform,
-                  status: distResult.success ? "published" : "failed",
-                  external_url: distResult.external_url || "",
-                  error_message: distResult.error_message || "",
-                  published_at: distResult.success
-                    ? new Date().toISOString()
-                    : null,
-                },
-              ]);
-            }
-
-            await supabase
-              .from("content_posts")
-              .update({
+          // Publish to blog if enabled
+          let blogUrl = "";
+          if (client.platforms_enabled.blog) {
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+            const blogRes = await fetch(`${appUrl}/api/blog`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                title: generated.title,
+                body_html: generated.body_html,
+                body_markdown: generated.body_markdown,
+                excerpt: generated.meta_description,
+                tags: [contentClient.industry],
                 status: "published",
-                published_at: new Date().toISOString(),
-              })
-              .eq("id", insertedPost.id);
+                tenant_id: client.id,
+              }),
+            });
 
-            await logAction(
-              client.id,
-              "published",
-              `Post "${generated.title}" auto-published to website and platforms`,
-              insertedPost.id
-            );
+            if (blogRes.ok) {
+              const blogData = await blogRes.json();
+              blogUrl = `${client.website_url}/blog/${blogData.post?.slug || generated.slug}`;
+            }
           }
+
+          const originalUrl = blogUrl || `${client.website_url}/blog/${generated.slug}`;
+
+          await supabase
+            .from("content_posts")
+            .update({ original_url: originalUrl })
+            .eq("id", insertedPost.id);
+
+          const distributionResults = await distributePost(client, {
+            ...insertedPost,
+            original_url: originalUrl,
+          } as ContentPost);
+
+          for (const distResult of distributionResults) {
+            await supabase.from("content_distributions").insert([
+              {
+                post_id: insertedPost.id,
+                platform: distResult.platform,
+                status: distResult.success ? "published" : "failed",
+                external_url: distResult.external_url || "",
+                error_message: distResult.error_message || "",
+                published_at: distResult.success
+                  ? new Date().toISOString()
+                  : null,
+              },
+            ]);
+          }
+
+          await supabase
+            .from("content_posts")
+            .update({
+              status: "published",
+              published_at: new Date().toISOString(),
+            })
+            .eq("id", insertedPost.id);
+
+          await logAction(
+            client.id,
+            "published",
+            `Post "${generated.title}" auto-published to blog and platforms`,
+            insertedPost.id
+          );
         } catch (publishError) {
           const message =
             publishError instanceof Error
