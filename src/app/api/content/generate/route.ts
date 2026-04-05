@@ -109,7 +109,7 @@ async function runGenerationPipeline(req: NextRequest) {
                 body_html: generated.body_html,
                 body_markdown: generated.body_markdown,
                 excerpt: generated.meta_description,
-                tags: [contentClient.industry],
+                tags: [client.industry],
                 status: "published",
                 tenant_id: client.id,
               }),
