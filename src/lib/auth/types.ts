@@ -23,6 +23,20 @@ export interface Tenant {
   stripe_subscription_id: string | null;
   settings: Record<string, unknown>;
   active: boolean;
+  // Content & social fields
+  industry: string;
+  target_audience: string;
+  brand_tone: string;
+  website_url: string;
+  platforms_enabled: {
+    blog: boolean;
+    facebook: boolean;
+    instagram: boolean;
+    google_business: boolean;
+  };
+  auto_approve: boolean;
+  notification_email: string;
+  payment_config?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

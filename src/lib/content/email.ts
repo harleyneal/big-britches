@@ -25,7 +25,7 @@ export async function sendApprovalEmail(
 ): Promise<void> {
   const htmlBody = `
     <h2>Content Ready for Approval</h2>
-    <p>Hi ${client.business_name},</p>
+    <p>Hi ${client.name},</p>
     <p>Your generated blog post is ready for review:</p>
     <h3>${post.title}</h3>
     <p>${post.meta_description}</p>
@@ -57,7 +57,7 @@ export async function sendPublishedEmail(
 
   const htmlBody = `
     <h2>Content Published Successfully</h2>
-    <p>Hi ${client.business_name},</p>
+    <p>Hi ${client.name},</p>
     <p>Your blog post has been published to the following platforms:</p>
     <ul>
       <li>Your Website: <a href="${originalUrl}">${post.title}</a></li>
@@ -85,7 +85,7 @@ export async function sendRejectionEmail(
 ): Promise<void> {
   const htmlBody = `
     <h2>Content Rejected</h2>
-    <p>Hi ${client.business_name},</p>
+    <p>Hi ${client.name},</p>
     <p>Your blog post "${post.title}" was rejected.</p>
     <p><strong>Reason:</strong> ${reason}</p>
     <p>You can request regeneration in your dashboard.</p>
@@ -109,7 +109,7 @@ export async function sendGenerationErrorEmail(
 ): Promise<void> {
   const htmlBody = `
     <h2>Content Generation Error</h2>
-    <p>Hi ${client.business_name},</p>
+    <p>Hi ${client.name},</p>
     <p>There was an error generating content for your account:</p>
     <p><strong>${error}</strong></p>
     <p>Please contact support if this issue persists.</p>

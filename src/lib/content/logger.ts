@@ -5,7 +5,7 @@ import { ContentLog } from "./types";
  * Log a content action to the database
  */
 export async function logAction(
-  client_id: string,
+  tenant_id: string,
   action: ContentLog["action"],
   details: string,
   post_id?: string,
@@ -15,7 +15,7 @@ export async function logAction(
     const supabase = getAdminClient();
 
     const log: Omit<ContentLog, "id"> = {
-      client_id,
+      tenant_id,
       post_id,
       action,
       platform,
@@ -46,7 +46,7 @@ export async function logDistributions(
       : `Failed to publish to ${result.platform}: ${result.error || "Unknown error"}`;
 
     await logAction(
-      "", // client_id would need to be fetched from post
+      "", // tenant_id would need to be fetched from post
       "distributed",
       details,
       post_id,

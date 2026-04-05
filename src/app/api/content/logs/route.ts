@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
     const page = parseInt(url.searchParams.get("page") || "1");
     const pageSize = Math.min(parseInt(url.searchParams.get("pageSize") || "20"), 100);
-    const clientId = url.searchParams.get("clientId");
+    const tenantId = url.searchParams.get("tenantId");
     const action = url.searchParams.get("action");
     const dateFrom = url.searchParams.get("dateFrom");
     const dateTo = url.searchParams.get("dateTo");
@@ -24,8 +24,8 @@ export async function GET(req: NextRequest) {
       .select("*", { count: "exact" })
       .order("timestamp", { ascending: false });
 
-    if (clientId) {
-      query = query.eq("client_id", clientId);
+    if (tenantId) {
+      query = query.eq("tenant_id", tenantId);
     }
     if (action) {
       query = query.eq("action", action);

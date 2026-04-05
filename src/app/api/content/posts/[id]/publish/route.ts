@@ -44,15 +44,15 @@ export async function POST(
       );
     }
 
-    // Get client details
+    // Get tenant details
     const { data: client, error: clientError } = await supabase
-      .from("content_clients")
+      .from("tenants")
       .select("*")
-      .eq("id", post.client_id)
+      .eq("id", post.tenant_id)
       .single();
 
     if (clientError || !client) {
-      throw new Error("Client not found");
+      throw new Error("Tenant not found");
     }
 
     const results = {
@@ -76,7 +76,7 @@ export async function POST(
             body_markdown: post.body_markdown,
             excerpt: post.meta_description,
             status: "published",
-            tenant_id: post.client_id,
+            tenant_id: post.tenant_id,
           }),
         });
 
@@ -105,7 +105,7 @@ export async function POST(
       .eq("id", id);
 
     await logAction(
-      post.client_id,
+      post.tenant_id,
       "published",
       `Post "${post.title}" published to blog: ${originalUrl}`,
       id
@@ -146,7 +146,7 @@ export async function POST(
       // Log platform distribution
       if (distResult.success) {
         await logAction(
-          post.client_id,
+          post.tenant_id,
           "distributed",
           `Post "${post.title}" published to ${distResult.platform}`,
           id,
@@ -154,7 +154,7 @@ export async function POST(
         );
       } else {
         await logAction(
-          post.client_id,
+          post.tenant_id,
           "error",
           `Failed to publish to ${distResult.platform}: ${distResult.error_message}`,
           id,

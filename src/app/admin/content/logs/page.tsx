@@ -26,7 +26,7 @@ export default function LogsPage() {
   const [total, setTotal] = useState(0);
 
   const [filters, setFilters] = useState({
-    clientId: "",
+    tenantId: "",
     action: "",
     dateFrom: "",
     dateTo: "",
@@ -42,7 +42,7 @@ export default function LogsPage() {
       params.append("page", page.toString());
       params.append("pageSize", pageSize.toString());
 
-      if (filters.clientId) params.append("clientId", filters.clientId);
+      if (filters.tenantId) params.append("tenantId", filters.tenantId);
       if (filters.action) params.append("action", filters.action);
       if (filters.dateFrom) params.append("dateFrom", filters.dateFrom);
       if (filters.dateTo) params.append("dateTo", filters.dateTo);
@@ -70,7 +70,7 @@ export default function LogsPage() {
 
   const handleClearFilters = () => {
     setFilters({
-      clientId: "",
+      tenantId: "",
       action: "",
       dateFrom: "",
       dateTo: "",
@@ -127,15 +127,15 @@ export default function LogsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">
-                Client ID
+                Tenant ID
               </label>
               <input
                 type="text"
-                value={filters.clientId}
+                value={filters.tenantId}
                 onChange={(e) =>
-                  handleFilterChange("clientId", e.target.value)
+                  handleFilterChange("tenantId", e.target.value)
                 }
-                placeholder="Filter by client..."
+                placeholder="Filter by tenant..."
                 className="w-full px-3 py-2 border border-[var(--sl-blue-10)] rounded-lg text-sm"
               />
             </div>
@@ -219,7 +219,7 @@ export default function LogsPage() {
                     Timestamp
                   </th>
                   <th className="text-left px-6 py-4 font-semibold text-[var(--sl-navy)] text-sm">
-                    Client
+                    Tenant
                   </th>
                   <th className="text-left px-6 py-4 font-semibold text-[var(--sl-navy)] text-sm">
                     Post
@@ -245,7 +245,7 @@ export default function LogsPage() {
                       {new Date(log.timestamp).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 text-sm text-[var(--sl-navy)]">
-                      {log.client_id}
+                      {log.tenant_id}
                     </td>
                     <td className="px-6 py-4 text-sm text-[var(--sl-navy)]">
                       {log.post_id || "—"}

@@ -75,20 +75,20 @@ export async function POST(
       throw new Error(`Failed to reject post: ${updateError?.message}`);
     }
 
-    // Get client details
-    const { data: client, error: clientError } = await supabase
-      .from("content_clients")
+    // Get tenant details
+    const { data: tenant, error: tenantError } = await supabase
+      .from("tenants")
       .select("*")
-      .eq("id", post.client_id)
+      .eq("id", post.tenant_id)
       .single();
 
-    if (clientError || !client) {
-      throw new Error("Client not found");
+    if (tenantError || !tenant) {
+      throw new Error("Tenant not found");
     }
 
     // Log action
     await logAction(
-      post.client_id,
+      post.tenant_id,
       "rejected",
       `Post "${post.title}" rejected. Reason: ${reason}`,
       id
@@ -98,7 +98,7 @@ export async function POST(
     try {
       await sendRejectionEmail(
         rejectedPost as ContentPost,
-        client as ContentClient,
+        tenant as ContentClient,
         reason
       );
     } catch (emailError) {

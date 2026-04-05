@@ -156,9 +156,9 @@ async function generateBlogPost(
     messages: [
       {
         role: "user",
-        content: `Create an SEO-optimized blog post for ${contentClient.business_name}.
+        content: `Create an SEO-optimized blog post for ${contentClient.name}.
 
-Company: ${contentClient.business_name}
+Company: ${contentClient.name}
 Industry: ${contentClient.industry}
 Target Audience: ${contentClient.target_audience}
 Brand Tone: ${contentClient.brand_tone}
@@ -221,7 +221,7 @@ async function generatePlatformVersions(
     messages: [
       {
         role: "user",
-        content: `Create platform-specific versions of this blog post content for ${contentClient.business_name}.
+        content: `Create platform-specific versions of this blog post content for ${contentClient.name}.
 
 Original Title: ${title}
 Original CTA: ${cta_text}

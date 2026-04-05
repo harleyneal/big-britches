@@ -1,26 +1,11 @@
-export interface ContentClient {
-  id: string;
-  business_name: string;
-  industry: string;
-  target_audience: string;
-  brand_tone: string;
-  website_url: string;
-  platforms_enabled: {
-    blog: boolean;
-    facebook: boolean;
-    instagram: boolean;
-    google_business: boolean;
-  };
-  auto_approve: boolean;
-  notification_email: string;
-  payment_config?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-}
+import type { Tenant } from "@/lib/auth/types";
+
+// ContentClient is now just an alias for Tenant
+export type ContentClient = Tenant;
 
 export interface ContentPost {
   id: string;
-  client_id: string;
+  tenant_id: string;
   status: "draft" | "pending_approval" | "approved" | "published" | "rejected";
   topic: string;
   title: string;
@@ -55,7 +40,7 @@ export interface ContentDistribution {
 
 export interface ContentLog {
   id: string;
-  client_id: string;
+  tenant_id: string;
   post_id?: string;
   action: "generated" | "approved" | "rejected" | "published" | "distributed" | "error";
   platform?: string;

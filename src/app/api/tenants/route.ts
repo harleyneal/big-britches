@@ -30,7 +30,11 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { name, slug, custom_domain, plan, primary_color } = body;
+  const {
+    name, slug, custom_domain, plan, primary_color,
+    industry, target_audience, brand_tone, website_url,
+    notification_email, auto_approve, platforms_enabled,
+  } = body;
 
   if (!name || !slug) {
     return NextResponse.json(
@@ -48,6 +52,13 @@ export async function POST(request: Request) {
       custom_domain: custom_domain || null,
       plan: plan || "startup",
       primary_color: primary_color || "#3B82F6",
+      industry: industry || "",
+      target_audience: target_audience || "",
+      brand_tone: brand_tone || "",
+      website_url: website_url || "",
+      notification_email: notification_email || "",
+      auto_approve: auto_approve || false,
+      platforms_enabled: platforms_enabled || { blog: true, facebook: false, instagram: false, google_business: false },
     })
     .select()
     .single();

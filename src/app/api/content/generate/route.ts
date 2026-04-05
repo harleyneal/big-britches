@@ -33,41 +33,41 @@ async function runGenerationPipeline(req: NextRequest) {
 
   const supabase = getAdminClient();
 
-  // Fetch all active clients
-  const { data: clients, error: clientsError } = await supabase
-    .from("content_clients")
+  // Fetch all active tenants
+  const { data: tenants, error: tenantsError } = await supabase
+    .from("tenants")
     .select("*")
     .eq("active", true);
 
-  if (clientsError || !clients) {
-    throw new Error(`Failed to fetch clients: ${clientsError?.message}`);
+  if (tenantsError || !tenants) {
+    throw new Error(`Failed to fetch tenants: ${tenantsError?.message}`);
   }
 
   const results = {
-    total: clients.length,
+    total: tenants.length,
     successful: 0,
     failed: 0,
     generated: [] as Array<{
-      client_id: string;
+      tenant_id: string;
       post_id: string;
       title: string;
       status: string;
     }>,
     errors: [] as Array<{
-      client_id: string;
+      tenant_id: string;
       error: string;
     }>,
   };
 
-  // Process each client
-  for (const client of clients as ContentClient[]) {
+  // Process each tenant
+  for (const client of tenants as ContentClient[]) {
     try {
       // Step 1: Generate content
       const generated = await generateContent(client);
 
       // Step 2: Create post in database
       const postData = {
-        client_id: client.id,
+        tenant_id: client.id,
         status: client.auto_approve ? "approved" : "pending_approval",
         topic: generated.topic,
         title: generated.title,
@@ -190,7 +190,7 @@ async function runGenerationPipeline(req: NextRequest) {
       }
 
       results.generated.push({
-        client_id: client.id,
+        tenant_id: client.id,
         post_id: insertedPost.id,
         title: generated.title,
         status: postData.status,
@@ -201,7 +201,7 @@ async function runGenerationPipeline(req: NextRequest) {
         clientError instanceof Error
           ? clientError.message
           : String(clientError);
-      results.errors.push({ client_id: client.id, error: message });
+      results.errors.push({ tenant_id: client.id, error: message });
       results.failed++;
 
       try {

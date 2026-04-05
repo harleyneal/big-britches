@@ -60,19 +60,19 @@ export async function POST(
       throw new Error(`Failed to approve post: ${updateError?.message}`);
     }
 
-    // Get client details
-    const { data: client, error: clientError } = await supabase
-      .from("content_clients")
+    // Get tenant details
+    const { data: tenant, error: tenantError } = await supabase
+      .from("tenants")
       .select("*")
-      .eq("id", post.client_id)
+      .eq("id", post.tenant_id)
       .single();
 
-    if (clientError || !client) {
-      throw new Error("Client not found");
+    if (tenantError || !tenant) {
+      throw new Error("Tenant not found");
     }
 
     // Publish to blog if enabled
-    const contentClient = client as ContentClient;
+    const contentClient = tenant as ContentClient;
     let originalUrl = post.original_url || "";
 
     if (contentClient.platforms_enabled.blog) {
@@ -87,7 +87,7 @@ export async function POST(
             body_markdown: approvedPost.body_markdown,
             excerpt: approvedPost.meta_description,
             status: "published",
-            tenant_id: post.client_id,
+            tenant_id: post.tenant_id,
           }),
         });
 
@@ -158,9 +158,9 @@ export async function POST(
 
     // Log action
     await logAction(
-      post.client_id,
+      post.tenant_id,
       "approved",
-      `Post "${post.title}" approved and published to website and platforms`,
+      `Post "${post.title}" approved and published to blog and platforms`,
       id
     );
 
@@ -168,7 +168,7 @@ export async function POST(
     try {
       await sendPublishedEmail(
         approvedPost as ContentPost,
-        client as ContentClient,
+        tenant as ContentClient,
         originalUrl || ""
       );
     } catch (emailError) {

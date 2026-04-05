@@ -13,7 +13,20 @@ export default function TenantsPage() {
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [creating, setCreating] = useState(false);
-  const [newTenant, setNewTenant] = useState<{ name: string; slug: string; custom_domain: string; plan: "startup" | "business"; primary_color: string }>({ name: "", slug: "", custom_domain: "", plan: "startup", primary_color: "#3B82F6" });
+  const [newTenant, setNewTenant] = useState({
+    name: "",
+    slug: "",
+    custom_domain: "",
+    plan: "startup" as "startup" | "business",
+    primary_color: "#3B82F6",
+    industry: "",
+    target_audience: "",
+    brand_tone: "",
+    website_url: "",
+    notification_email: "",
+    auto_approve: false,
+    platforms_enabled: { blog: true, facebook: false, instagram: false, google_business: false },
+  });
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   // Only super_admin can access this page
@@ -47,7 +60,7 @@ export default function TenantsPage() {
 
     if (res.ok) {
       setShowCreate(false);
-      setNewTenant({ name: "", slug: "", custom_domain: "", plan: "startup", primary_color: "#3B82F6" });
+      setNewTenant({ name: "", slug: "", custom_domain: "", plan: "startup", primary_color: "#3B82F6", industry: "", target_audience: "", brand_tone: "", website_url: "", notification_email: "", auto_approve: false, platforms_enabled: { blog: true, facebook: false, instagram: false, google_business: false } });
       fetchTenants();
     }
     setCreating(false);
@@ -138,7 +151,7 @@ export default function TenantsPage() {
       {/* Create Modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
+          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
             <h2 className="text-lg font-semibold text-[var(--sl-navy)] mb-4">Create New Tenant</h2>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
@@ -206,6 +219,93 @@ export default function TenantsPage() {
                   </div>
                 </div>
               </div>
+              {/* Content & Social Settings */}
+              <div className="border-t border-gray-200 pt-4 mt-2">
+                <h3 className="text-sm font-semibold text-[var(--sl-navy)] mb-3">Content & Social Settings</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">Industry</label>
+                      <input
+                        type="text"
+                        value={newTenant.industry}
+                        onChange={(e) => setNewTenant({ ...newTenant, industry: e.target.value })}
+                        className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-[var(--sl-ice)] text-[var(--sl-navy)] focus:ring-2 focus:ring-[var(--sl-blue)] focus:border-transparent text-sm"
+                        placeholder="e.g., Web Design"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">Website URL</label>
+                      <input
+                        type="url"
+                        value={newTenant.website_url}
+                        onChange={(e) => setNewTenant({ ...newTenant, website_url: e.target.value })}
+                        className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-[var(--sl-ice)] text-[var(--sl-navy)] focus:ring-2 focus:ring-[var(--sl-blue)] focus:border-transparent text-sm"
+                        placeholder="https://example.com"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">Target Audience</label>
+                    <input
+                      type="text"
+                      value={newTenant.target_audience}
+                      onChange={(e) => setNewTenant({ ...newTenant, target_audience: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-[var(--sl-ice)] text-[var(--sl-navy)] focus:ring-2 focus:ring-[var(--sl-blue)] focus:border-transparent text-sm"
+                      placeholder="e.g., Small business owners"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">Brand Tone</label>
+                    <input
+                      type="text"
+                      value={newTenant.brand_tone}
+                      onChange={(e) => setNewTenant({ ...newTenant, brand_tone: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-[var(--sl-ice)] text-[var(--sl-navy)] focus:ring-2 focus:ring-[var(--sl-blue)] focus:border-transparent text-sm"
+                      placeholder="e.g., Professional, friendly, slightly cheeky"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--sl-navy)] mb-1">Notification Email</label>
+                    <input
+                      type="email"
+                      value={newTenant.notification_email}
+                      onChange={(e) => setNewTenant({ ...newTenant, notification_email: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-[var(--sl-ice)] text-[var(--sl-navy)] focus:ring-2 focus:ring-[var(--sl-blue)] focus:border-transparent text-sm"
+                      placeholder="team@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[var(--sl-navy)] mb-2">Platforms Enabled</label>
+                    <div className="flex flex-wrap gap-3">
+                      {(["blog", "facebook", "instagram", "google_business"] as const).map((platform) => (
+                        <label key={platform} className="flex items-center gap-2 text-sm text-[var(--sl-navy)]">
+                          <input
+                            type="checkbox"
+                            checked={newTenant.platforms_enabled[platform]}
+                            onChange={(e) => setNewTenant({
+                              ...newTenant,
+                              platforms_enabled: { ...newTenant.platforms_enabled, [platform]: e.target.checked },
+                            })}
+                            className="rounded border-gray-300 text-[var(--sl-blue)] focus:ring-[var(--sl-blue)]"
+                          />
+                          {platform === "google_business" ? "Google Business" : platform.charAt(0).toUpperCase() + platform.slice(1)}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <label className="flex items-center gap-2 text-sm text-[var(--sl-navy)]">
+                    <input
+                      type="checkbox"
+                      checked={newTenant.auto_approve}
+                      onChange={(e) => setNewTenant({ ...newTenant, auto_approve: e.target.checked })}
+                      className="rounded border-gray-300 text-[var(--sl-blue)] focus:ring-[var(--sl-blue)]"
+                    />
+                    Auto-approve generated content (skip manual review)
+                  </label>
+                </div>
+              </div>
+
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"

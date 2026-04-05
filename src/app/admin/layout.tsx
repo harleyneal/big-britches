@@ -5,7 +5,6 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
-  Users,
   ScrollText,
   Building2,
   Settings,
@@ -63,7 +62,6 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
 
   // Build nav items — main navigation (no Settings or Dashboard here)
   const navItems = [
-    { label: "Clients", href: "/admin/content/clients", icon: Users },
     { label: "Social", href: "/admin/social", icon: Share2 },
     { label: "Payments", href: "/admin/payments", icon: CreditCard },
     { label: "Logs", href: "/admin/content/logs", icon: ScrollText },

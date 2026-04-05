@@ -5,7 +5,7 @@ import { ContentPost } from "@/lib/content/types";
 /**
  * GET /api/content/posts
  * List all posts with optional filtering
- * Query params: ?client_id=, ?status=, ?limit=, ?offset=
+ * Query params: ?tenant_id=, ?status=, ?limit=, ?offset=
  */
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
 
     // Get query parameters
-    const clientId = url.searchParams.get("client_id");
+    const clientId = url.searchParams.get("tenant_id");
     const status = url.searchParams.get("status");
     const limit = Math.min(parseInt(url.searchParams.get("limit") || "50"), 100);
     const offset = parseInt(url.searchParams.get("offset") || "0");
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     // Apply filters
     if (clientId) {
-      query = query.eq("client_id", clientId);
+      query = query.eq("tenant_id", clientId);
     }
     if (status) {
       query = query.eq("status", status);
