@@ -50,8 +50,9 @@ export async function sendPublishedEmail(
   originalUrl: string
 ): Promise<void> {
   const platforms = [];
-  if (client.platforms_enabled.linkedin) platforms.push("LinkedIn");
-  if (client.platforms_enabled.medium) platforms.push("Medium");
+  if (client.platforms_enabled.blog) platforms.push("Blog");
+  if (client.platforms_enabled.facebook) platforms.push("Facebook");
+  if (client.platforms_enabled.instagram) platforms.push("Instagram");
   if (client.platforms_enabled.google_business) platforms.push("Google Business Profile");
 
   const htmlBody = `

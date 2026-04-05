@@ -719,8 +719,8 @@ export default function ClientConfigPage() {
               <p className="text-[var(--sl-navy)] capitalize">{String(client.brand_tone || "—")}</p>
             </div>
             <div>
-              <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">CMS Type</p>
-              <p className="text-[var(--sl-navy)]">{String(client.cms_type || "—")}</p>
+              <p className="text-xs font-medium text-[var(--sl-navy)] opacity-50 mb-1">Notification Email</p>
+              <p className="text-[var(--sl-navy)]">{String(client.notification_email || "—")}</p>
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-[var(--sl-blue-10)]">
